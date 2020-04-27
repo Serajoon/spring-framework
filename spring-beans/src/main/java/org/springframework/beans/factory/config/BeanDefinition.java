@@ -30,6 +30,9 @@ import org.springframework.lang.Nullable;
  * {@link BeanFactoryPostProcessor} such as {@link PropertyPlaceholderConfigurer}
  * to introspect and modify property values and other bean metadata.
  *
+ * serajoon
+ * Spring使用BeanDefinition来描述bean,bean的抽象
+ *
  * @author Juergen Hoeller
  * @author Rob Harrop
  * @since 19.03.2004

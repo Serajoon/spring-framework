@@ -24,6 +24,8 @@ import org.springframework.util.ObjectUtils;
  * Holder for a key-value style attribute that is part of a bean definition.
  * Keeps track of the definition source in addition to the key-value pair.
  *
+ * serajoon
+ * Bean元数据定义中以键-值风格的属性信息
  * @author Juergen Hoeller
  * @since 2.5
  */

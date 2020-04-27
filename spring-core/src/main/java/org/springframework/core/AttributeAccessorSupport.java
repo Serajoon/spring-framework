@@ -30,6 +30,9 @@ import org.springframework.util.StringUtils;
  *
  * <p>{@link Serializable} if subclasses and all attribute values are {@link Serializable}.
  *
+ * serajoon
+ * AttributeAccessorSupport是实现AttributeAccessor的抽象类,内部由LinkedHashMap实现
+ *
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @since 2.0
@@ -48,6 +51,7 @@ public abstract class AttributeAccessorSupport implements AttributeAccessor, Ser
 			this.attributes.put(name, value);
 		}
 		else {
+			//serajoon values是null,则删除该named对应的值
 			removeAttribute(name);
 		}
 	}
