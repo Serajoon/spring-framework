@@ -30,6 +30,10 @@ import org.springframework.lang.Nullable;
  * <p>The currently supported {@link MethodOverride} variants are
  * {@link LookupOverride} and {@link ReplaceOverride}.
  *
+ * serajoon
+ * 方法覆盖集合,确定Spring IoC容器在运行时将覆盖托管对象上的哪些方法(如果有的话)
+ * 目前支持的MethodOverride变体是LookupOverride和ReplaceOverride。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 1.1
