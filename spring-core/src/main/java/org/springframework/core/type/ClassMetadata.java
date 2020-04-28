@@ -54,6 +54,8 @@ public interface ClassMetadata {
 	/**
 	 * Return whether the underlying class represents a concrete class,
 	 * i.e. neither an interface nor an abstract class.
+	 * serajoon
+	 * 是否表示具体类,即既不是接口也不是抽象类
 	 */
 	boolean isConcrete();
 
