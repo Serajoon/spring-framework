@@ -111,6 +111,12 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	/**
 	 * Check whether the given annotation is a stereotype that is allowed
 	 * to suggest a component name through its annotation {@code value()}.
+	 *
+	 * <br>
+	 * serajoon<br>
+	 * 检查给定的注释是否是允许通过其注释值来给组件命名
+	 * 注解有value属性
+	 *
 	 * @param annotationType the name of the annotation class to check
 	 * @param metaAnnotationTypes the names of meta-annotations on the given annotation
 	 * @param attributes the map of attributes for the given annotation

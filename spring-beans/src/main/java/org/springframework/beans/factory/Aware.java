@@ -28,6 +28,11 @@ package org.springframework.beans.factory;
  * Refer to {@link org.springframework.context.support.ApplicationContextAwareProcessor}
  * for an example of processing specific {@code *Aware} interface callbacks.
  *
+ * <br>
+ * serajoon<br>
+ * 标记接口,Spring Aware的目的就是为了Bean获得Spring容器的服务
+ *
+ *
  * @author Chris Beams
  * @author Juergen Hoeller
  * @since 3.1

@@ -29,8 +29,8 @@ import org.springframework.util.StringUtils;
  * a base implementation of all methods. To be extended by subclasses.
  *
  * <p>{@link Serializable} if subclasses and all attribute values are {@link Serializable}.
- *
- * serajoon
+ * <br>
+ * serajoon<br>
  * AttributeAccessorSupport是实现AttributeAccessor的抽象类,内部由LinkedHashMap实现
  *
  * @author Rob Harrop

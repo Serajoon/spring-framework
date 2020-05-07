@@ -23,7 +23,7 @@ import org.springframework.lang.Nullable;
  * that carry a configuration source object.
  *
  * serajoon
- * 用来获取元数据元素的配置源对象
+ * 用来获取元数据元素的配置源对象,用于传送配置源对象的超级接口
  *
  * @author Juergen Hoeller
  * @since 2.0

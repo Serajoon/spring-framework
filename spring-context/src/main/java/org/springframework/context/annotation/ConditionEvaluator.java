@@ -40,6 +40,9 @@ import org.springframework.util.MultiValueMap;
 
 /**
  * Internal class used to evaluate {@link Conditional} annotations.
+ * <br>
+ * serajoon<br>
+ * 对注解Conditional的解s析器
  *
  * @author Phillip Webb
  * @author Juergen Hoeller
@@ -78,6 +81,7 @@ class ConditionEvaluator {
 	 * @return if the item should be skipped
 	 */
 	public boolean shouldSkip(@Nullable AnnotatedTypeMetadata metadata, @Nullable ConfigurationPhase phase) {
+		//serajoon 检查是否包含@Conditional类型的注解
 		if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) {
 			return false;
 		}

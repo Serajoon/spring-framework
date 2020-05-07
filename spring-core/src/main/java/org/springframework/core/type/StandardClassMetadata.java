@@ -27,6 +27,9 @@ import org.springframework.util.StringUtils;
  * {@link ClassMetadata} implementation that uses standard reflection
  * to introspect a given {@code Class}.
  *
+ * serajoon
+ * 除构造方法万,所有的方法实现,都是基于introspectedClass,类似代理模式
+ *
  * @author Juergen Hoeller
  * @since 2.5
  */
@@ -37,6 +40,9 @@ public class StandardClassMetadata implements ClassMetadata {
 
 	/**
 	 * Create a new StandardClassMetadata wrapper for the given Class.
+	 *
+	 * serajoon
+	 * 唯一构造函数,introspectedClass作为内省对象
 	 * @param introspectedClass the Class to introspect
 	 */
 	public StandardClassMetadata(Class<?> introspectedClass) {

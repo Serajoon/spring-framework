@@ -39,6 +39,11 @@ import org.springframework.util.MultiValueMap;
 public interface AnnotatedTypeMetadata {
 
 	/**
+	 * serajoon<br/>
+	 * 此元素是否标注有annotationName注解<br/>
+	 * annotationName:注解全类名<br/>
+	 * <br/>
+	 *
 	 * Determine whether the underlying element has an annotation or meta-annotation
 	 * of the given type defined.
 	 * <p>If this method returns {@code true}, then
@@ -46,10 +51,16 @@ public interface AnnotatedTypeMetadata {
 	 * @param annotationName the fully qualified class name of the annotation
 	 * type to look for
 	 * @return whether a matching annotation is defined
+	 *
 	 */
 	boolean isAnnotated(String annotationName);
 
 	/**
+	 * serajoon<br/>
+	 * 得指定类型注解的所有的(属性-值)(k-v)<br/>
+	 * annotationName:注解的全限定名<br/>
+	 * <br/>
+	 *
 	 * Retrieve the attributes of the annotation of the given type, if any (i.e. if
 	 * defined on the underlying element, as direct annotation or meta-annotation),
 	 * also taking attribute overrides on composed annotations into account.
@@ -63,6 +74,11 @@ public interface AnnotatedTypeMetadata {
 	Map<String, Object> getAnnotationAttributes(String annotationName);
 
 	/**
+	 *
+	 * serajoon<br/>
+	 * classValuesAsString:true:将class转换为string,默认为false<br/>
+	 * <br/>
+	 *
 	 * Retrieve the attributes of the annotation of the given type, if any (i.e. if
 	 * defined on the underlying element, as direct annotation or meta-annotation),
 	 * also taking attribute overrides on composed annotations into account.

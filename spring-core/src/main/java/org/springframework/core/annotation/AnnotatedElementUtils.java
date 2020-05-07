@@ -999,7 +999,7 @@ public abstract class AnnotatedElementUtils {
 				}
 			}
 		}
-
+		//serajoon 递归搜索元注解
 		// Recursively search in meta-annotations
 		for (Annotation annotation : annotations) {
 			Class<? extends Annotation> currentAnnotationType = annotation.annotationType();
