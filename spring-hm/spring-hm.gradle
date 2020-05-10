@@ -1,0 +1,7 @@
+description = "Spring HM"
+
+apply plugin: "groovy"
+
+dependencies {
+    compile(project(":spring-context"))
+}
