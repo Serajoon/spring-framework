@@ -831,6 +831,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/**
 	 * Finish the initialization of this context's bean factory,
 	 * initializing all remaining singleton beans.
+	 * <br>
+	 * serajoon<br>
+	 * Bean的生命周期在这完成<br>
+	 * 	1. 创建所有非懒加载的单例类<br>
+	 * 	2. invoke BeanPostProcessors
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// Initialize conversion service for this context.
