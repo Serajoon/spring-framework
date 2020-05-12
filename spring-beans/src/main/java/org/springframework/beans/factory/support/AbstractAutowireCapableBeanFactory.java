@@ -453,6 +453,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	/**
 	 * Central method of this class: creates a bean instance,
 	 * populates the bean instance, applies post-processors, etc.
+	 * <br>
+	 * serajoon<br>
+	 * 该类的中心方法:创建一个bean实例,填充bean实例,应用后处理程序,等等.
 	 * @see #doCreateBean
 	 */
 	@Override
@@ -1163,6 +1166,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// No special handling: simply use no-arg constructor.
+		// seraejoon 不需要特殊处理:只需使用无参数构造函数。
 		return instantiateBean(beanName, mbd);
 	}
 
