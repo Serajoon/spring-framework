@@ -70,16 +70,22 @@ import org.springframework.util.StringUtils;
  */
 public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements SingletonBeanRegistry {
 
-	/** Cache of singleton objects: bean name to bean instance. */
-	// serajoon 缓存创建完成的单例Bean
+	/**
+	 * Cache of singleton objects: bean name to bean instance.
+	 * serajoon 缓存创建完成的单例Bean
+	 */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
-	/** Cache of singleton factories: bean name to ObjectFactory. */
-	// serajoon 映射创建Bean的原始工厂
+	/**
+	 * Cache of singleton factories: bean name to ObjectFactory.
+	 *  serajoon 映射创建Bean的原始工厂
+	 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
-	/** Cache of early singleton objects: bean name to bean instance. */
-	// serajoon 映射Bean的早期引用,也就是说在这个Map里的Bean不是完整的,甚至还不能称之为Bean,只是一个Instance
+	/**
+	 * Cache of early singleton objects: bean name to bean instance.
+	 * serajoon 映射Bean的早期引用,也就是说在这个Map里的Bean不是完整的,甚至还不能称之为Bean,只是一个Instance
+	 */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
 	/** Set of registered singletons, containing the bean names in registration order. */
@@ -222,6 +228,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
+					// serajoon 使用工厂创建bean对象的后置处理器
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
 				}
@@ -334,6 +341,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/**
 	 * Callback before singleton creation.
 	 * <p>The default implementation register the singleton as currently in creation.
+	 * <br> serajoon 将singleton注册为正在创建的状态的默认实现
+	 * <br> 正在创建的单例类集合
+	 * <br> 解决单例对象只会创建一次,当创建一个单例对象的时候会向singletonsCurrentlyInCreation添加beanName,
+	 * <br> 另外一个线程创建的时候,也会添加beanName到singletonsCurrentlyInCreation,add方法会返回false.创建完后,从中删除
 	 * @param beanName the name of the singleton about to be created
 	 * @see #isSingletonCurrentlyInCreation
 	 */
