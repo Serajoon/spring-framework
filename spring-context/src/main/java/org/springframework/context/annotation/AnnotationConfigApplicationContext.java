@@ -84,6 +84,8 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... annotatedClasses) {
 		this();
+		//serajoon 关闭循环依赖,如果存在循环依赖,抛出异常
+		//setAllowCircularReferences(false);
 		register(annotatedClasses);
 		refresh();
 	}
