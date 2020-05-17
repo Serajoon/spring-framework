@@ -65,6 +65,8 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 	/**
 	 * Cached introspections results for this object, to prevent encountering
 	 * the cost of JavaBeans introspection every time.
+	 * <br>serajoon
+	 * <br>缓存内省结果
 	 */
 	@Nullable
 	private CachedIntrospectionResults cachedIntrospectionResults;
@@ -168,6 +170,8 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 	/**
 	 * Obtain a lazily initializted CachedIntrospectionResults instance
 	 * for the wrapped object.
+	 * <br>serajoon
+	 * 懒加载缓存内省结果的对象
 	 */
 	private CachedIntrospectionResults getCachedIntrospectionResults() {
 		if (this.cachedIntrospectionResults == null) {

@@ -26,6 +26,9 @@ import org.springframework.lang.Nullable;
  * (such as bean properties of an object or fields in an object)
  * Serves as base interface for {@link BeanWrapper}.
  *
+ * <br>serajoon
+ * 存取Bean对象的属性,所有Spring创建的Bean对象,都使用该接口存取Bean属性值
+ *
  * @author Juergen Hoeller
  * @since 1.1
  * @see BeanWrapper
@@ -37,6 +40,9 @@ public interface PropertyAccessor {
 	/**
 	 * Path separator for nested properties.
 	 * Follows normal Java conventions: getFoo().getBar() would be "foo.bar".
+	 * <br>serajoon
+	 * <br>嵌套的属性分隔符
+	 * <br>比如foo.bar最终会调用getFoo().getBar()两个方法
 	 */
 	String NESTED_PROPERTY_SEPARATOR = ".";
 
@@ -49,6 +55,7 @@ public interface PropertyAccessor {
 	/**
 	 * Marker that indicates the start of a property key for an
 	 * indexed or mapped property like "person.addresses[0]".
+	 * <br>代表角标index的符号,如person.addresses[0]这样就可以把值放进集合/数组/Map里了
 	 */
 	String PROPERTY_KEY_PREFIX = "[";
 
@@ -219,6 +226,8 @@ public interface PropertyAccessor {
 	 * {@link PropertyBatchUpdateException} containing all the individual errors.
 	 * This exception can be examined later to see all binding errors.
 	 * Properties that were successfully updated remain changed.
+	 * <br>serajoon
+	 * <br>ignoreUnknown/ignoreInvalid分别对应不存在和无效值的处理策略
 	 * @param pvs a PropertyValues to set on the target object
 	 * @param ignoreUnknown should we ignore unknown properties (not found in the bean)
 	 * @param ignoreInvalid should we ignore invalid properties (found but not accessible)

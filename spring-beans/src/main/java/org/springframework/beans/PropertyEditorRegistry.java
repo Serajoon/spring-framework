@@ -23,7 +23,8 @@ import org.springframework.lang.Nullable;
 /**
  * Encapsulates methods for registering JavaBeans {@link PropertyEditor PropertyEditors}.
  * This is the central interface that a {@link PropertyEditorRegistrar} operates on.
- *
+ * <br>serajoon
+ * 属性编辑器注册表,封装用于注册Javabean PropertyEditors的方法
  * <p>Extended by {@link BeanWrapper}; implemented by {@link BeanWrapperImpl}
  * and {@link org.springframework.validation.DataBinder}.
  *
@@ -38,6 +39,8 @@ public interface PropertyEditorRegistry {
 
 	/**
 	 * Register the given custom property editor for all properties of the given type.
+	 * <br> serajoon
+	 * <br> 为给定类型的所有属性注册给定的自定义属性编辑器
 	 * @param requiredType the type of the property
 	 * @param propertyEditor the editor to register
 	 */
@@ -57,6 +60,10 @@ public interface PropertyEditorRegistry {
 	 * <p>For example, if you wanted to register an editor for "items[n].quantity"
 	 * (for all values n), you would use "items.quantity" as the value of the
 	 * 'propertyPath' argument to this method.
+	 *
+	 * <br> serajoon
+	 * <br> 为给定类型和属性,或为给定类型的所有属性注册给定的自定义属性编辑器
+	 * <br> requiredType:属性类型
 	 * @param requiredType the type of the property. This may be {@code null}
 	 * if a property is given but should be specified in any case, in particular in
 	 * case of a Collection - making clear whether the editor is supposed to apply

@@ -138,6 +138,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	/**
 	 * Activate the default editors for this registry instance,
 	 * allowing for lazily registering default editors when needed.
+	 * <br> serajoon
+	 * <br> 激活这个注册表实例的默认编辑器,允许懒注册的默认编辑器在需要的时候被注册
 	 */
 	protected void registerDefaultEditors() {
 		this.defaultEditorsActive = true;
@@ -149,6 +151,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	 * <p>Those editors are not registered by default simply because they are in
 	 * general inappropriate for data binding purposes. Of course, you may register
 	 * them individually in any case, through {@link #registerCustomEditor}.
+	 * <br> serajoon
+	 * <br> 激活配置编辑器,为了配置值,这些编辑器没有被默认注册,因为他们不大适合用于数据绑定
 	 */
 	public void useConfigValueEditors() {
 		this.configValueEditorsActive = true;
@@ -270,6 +274,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 	/**
 	 * Copy the default editors registered in this instance to the given target registry.
+	 * <br> serajoon
+	 * <br> 把这个注册表实例中的默认编辑器复制到另一个注册表中
 	 * @param target the target registry to copy to
 	 */
 	protected void copyDefaultEditorsTo(PropertyEditorRegistrySupport target) {
