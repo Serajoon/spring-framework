@@ -1,13 +1,15 @@
 package com.serajoon;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-//@Component("c")
-public class C {
+@Component("a")
+@Data
+public class A {
 	@Autowired
-	private C c;
-	public C getC() {
-		return c;
+    private B b;
+	public B getB() {
+		return b;
 	}
 }
