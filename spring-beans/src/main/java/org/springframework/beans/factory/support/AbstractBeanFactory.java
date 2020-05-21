@@ -238,7 +238,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@SuppressWarnings("unchecked")
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
-
+		//serajoon 验证bean的名字是否合法
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
@@ -315,8 +315,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 				// Create bean instance.
 				if (mbd.isSingleton()) {
+					//serajoon 调用DefaultSingletonBeanRegistry的getSingleton
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
+							// serajoon 在匿名类中调用AbstractAutowireCapableBeanFactory的createBean
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {

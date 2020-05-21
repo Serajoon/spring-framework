@@ -434,6 +434,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		Object result = existingBean;
 		for (BeanPostProcessor processor : getBeanPostProcessors()) {
+			// serajoon 策略设计模式,实现了相同的接口,同一个方法有不同的实现
 			Object current = processor.postProcessAfterInitialization(result, beanName);
 			if (current == null) {
 				return result;
@@ -490,6 +491,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+			// serajoon 第一次调用后置处理器 aop
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -541,9 +543,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		if (instanceWrapper == null) {
-			//serajoon 实例化对象,第二次调用后置处理器
+			//serajoon 实例化对象,并用BeanWrapper包装,只是最原始的Bean对象,并进行第二次调用后置处理器
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
+		// serajoon 得到实例化对象
 		final Object bean = instanceWrapper.getWrappedInstance();
 		Class<?> beanType = instanceWrapper.getWrappedClass();
 		if (beanType != NullBean.class) {
@@ -555,6 +558,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (!mbd.postProcessed) {
 				try {
 					//serajoon 第三次调用后置处理器
+					//通过后置处理器应用合并之后的bd
+					//把所有需要注入的元素拿出来存到一个集合中
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
@@ -582,8 +587,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Initialize the bean instance.
 		Object exposedObject = bean;
 		try {
-			//serajoon 填充属性依赖注入
-			//serajoon 调用第五次和第六次后置处理器
+			// serajoon 填充属性依赖注入
+			// 调用第五次和第六次后置处理器
+			// 判断是否需要完成属性注入,需要则完成注入
 			populateBean(beanName, mbd, instanceWrapper);
 			//serajoon 初始化spring 调用第七次和第八次后置处理器
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
@@ -1163,6 +1169,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Candidate constructors for autowiring?
+		//serajoon 调用后置处理器推断构造方法 最难的
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
@@ -1275,6 +1282,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 						getAccessControlContext());
 			}
 			else {
+				// serajoon 利用反射实例化出Bean的对象
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);
 			}
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
@@ -1749,6 +1757,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}, getAccessControlContext());
 		}
 		else {
+			// serajoon 完成部分Aware接口回调
 			invokeAwareMethods(beanName, bean);
 		}
 
@@ -1768,7 +1777,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					beanName, "Invocation of init method failed", ex);
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
-			//serajoon 完成AOP代理
+			//serajoon 完成AOP代理,完成其余Aware回调
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 

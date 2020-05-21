@@ -618,6 +618,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 			}
 			if (value != null) {
 				ReflectionUtils.makeAccessible(field);
+				// serajoon 将属性注入到Bean
 				field.set(bean, value);
 			}
 		}

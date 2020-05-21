@@ -85,6 +85,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/**
 	 * Cache of early singleton objects: bean name to bean instance.
 	 * <br> serajoon 缓存实例(这是new出来的对象),也就是说在这个Map里的Bean不是完整的,甚至还不能称之为Bean,只是一个Instance
+	 * <br> 是由singletonFactory制造出来的
 	 * <br> 解决循环引用问题
 	 */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
@@ -181,6 +182,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * Return the (raw) singleton object registered under the given name.
 	 * <p>Checks already instantiated singletons and also allows for an early
 	 * reference to a currently created singleton (resolving a circular reference).
+	 * <br> serajoon
+	 * <br> 在getSingleton的时候,spring的默认实现是先从singletonObjects寻找,如果找不到,
+	 * <br> 再从earlySingletonObjects寻找,仍然找不到,那就从singletonFactories寻找对应的制造singleton的工厂,
+	 * <br> 然后调用工厂的getObject方法,造出对应的SingletonBean,并放入earlySingletonObjects中
 	 * @param beanName the name of the bean to look for
 	 * @param allowEarlyReference whether early references should be created or not
 	 * @return the registered singleton object, or {@code null} if none found
@@ -207,6 +212,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/**
 	 * Return the (raw) singleton object registered under the given name,
 	 * creating and registering a new one if none registered yet.
+	 * <br> serajoon
+	 * <br> 主要是以下四个方法
+	 * <br> 1.beforeSingletonCreation(beanName);
+	 * <br> 2.singletonFactory.getObject();
+	 * <br> 3.afterSingletonCreation(beanName);
+	 * <br> 4.addSingleton(beanName, singletonObject);
 	 * @param beanName the name of the bean
 	 * @param singletonFactory the ObjectFactory to lazily create the singleton
 	 * with, if necessary
@@ -361,6 +372,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/**
 	 * Callback after singleton creation.
 	 * <p>The default implementation marks the singleton as not in creation anymore.
+	 * <br> serajoon
+	 * <br> 将已经创建好的Bean从singletonsCurrentlyInCreation移除
+	 * <br> this.singletonsCurrentlyInCreation.remove(beanName) beanName存在->true
 	 * @param beanName the name of the singleton that has been created
 	 * @see #isSingletonCurrentlyInCreation
 	 */

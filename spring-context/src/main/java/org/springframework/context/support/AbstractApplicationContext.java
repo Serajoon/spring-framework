@@ -525,6 +525,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
+				//serajoon 5.执行所有Bean工厂的后置处理器,在该步骤中首先会去加载Bean定义,然后执行beanFactory的后置处理器
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
@@ -543,6 +544,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				// serajoon 11.完成所有单实例bean的创建及初始化
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
