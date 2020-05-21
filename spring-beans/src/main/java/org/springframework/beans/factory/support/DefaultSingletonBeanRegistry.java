@@ -165,6 +165,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
 			if (!this.singletonObjects.containsKey(beanName)) {
+				// serajoon 就只有这一个地方调用了singletonFactories.put
 				this.singletonFactories.put(beanName, singletonFactory);
 				this.earlySingletonObjects.remove(beanName);
 				this.registeredSingletons.add(beanName);
@@ -184,7 +185,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * reference to a currently created singleton (resolving a circular reference).
 	 * <br> serajoon
 	 * <br> 在getSingleton的时候,spring的默认实现是先从singletonObjects寻找,如果找不到,
-	 * <br> 再从earlySingletonObjects寻找,仍然找不到,那就从singletonFactories寻找对应的制造singleton的工厂,
+	 * <br> 再从earlySingletonObjects寻找,仍然找不到,那就从singletonFactories寻找对应的制造singleton的工厂singletonFactory,
+	 * <br> 而singletonFactory是addSingletonFactory(beanName,()->getEarlyBeanReference(beanName,mbd,bean));
+	 * <br> 中的()->getEarlyBeanReference(beanName, mbd, bean)
 	 * <br> 然后调用工厂的getObject方法,造出对应的SingletonBean,并放入earlySingletonObjects中
 	 * @param beanName the name of the bean to look for
 	 * @param allowEarlyReference whether early references should be created or not
@@ -194,12 +197,14 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			// serajoon 如果从singletonObjects获取不到bean,而且该beanName正在创建
 			synchronized (this.singletonObjects) {
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) {
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
+						// serajoon 只有这一个地方调用earlySingletonObjects.put
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);
 					}
@@ -356,7 +361,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/**
 	 * Callback before singleton creation.
 	 * <p>The default implementation register the singleton as currently in creation.
-	 * <br> serajoon 将singleton注册为正在创建的状态的默认实现
+	 * <br> serajoon
+	 * <br> 把当前正在加载的beanName加载到Set里面,可以以此来进行循环依赖的检查
 	 * <br> 如果singletonsCurrentlyInCreation没有beanName则添加进去,返回true,如果存在则添加失败,返回false
 	 * <br> 解决单例对象只会创建一次,当创建一个单例对象的时候会向singletonsCurrentlyInCreation添加beanName,便于以后对循环依赖进行检测
 	 * <br> 另外一个线程创建的时候,也添加beanName到singletonsCurrentlyInCreation,add方法会返回false.创建完后,从中删除
