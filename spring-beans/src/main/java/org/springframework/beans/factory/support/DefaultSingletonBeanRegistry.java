@@ -72,19 +72,24 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * Cache of singleton objects: bean name to bean instance.
-	 * <br> serajoon 缓存创建完成的单例Bean
+	 * <br> serajoon
+	 * <br> 1级缓存
+	 * <br> 缓存创建完成的单例Bean
 	 */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
 	/**
 	 * Cache of singleton factories: bean name to ObjectFactory.
-	 * <br> serajoon 映射创建Bean的原始工厂
+	 * <br> serajoon
+	 * <br> 映射创建Bean的原始工厂
+	 * <br> 3级缓存
 	 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/**
 	 * Cache of early singleton objects: bean name to bean instance.
 	 * <br> serajoon 缓存实例(这是new出来的对象),也就是说在这个Map里的Bean不是完整的,甚至还不能称之为Bean,只是一个Instance
+	 * <br> 2级缓存
 	 * <br> 是由singletonFactory制造出来的
 	 * <br> 解决循环引用问题
 	 */
@@ -201,11 +206,13 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 			synchronized (this.singletonObjects) {
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) {
+					// serajoon 从3级缓存拿到工厂对象
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
-						// serajoon 只有这一个地方调用earlySingletonObjects.put
+						// serajoon 只有这一个地方调用earlySingletonObjects.put,放到2级缓存
 						this.earlySingletonObjects.put(beanName, singletonObject);
+						// serajoon 删除3级缓存的beanName
 						this.singletonFactories.remove(beanName);
 					}
 				}
@@ -232,6 +239,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		Assert.notNull(beanName, "Bean name must not be null");
 		synchronized (this.singletonObjects) {
 			Object singletonObject = this.singletonObjects.get(beanName);
+			// serajoon singletonObject==null 则开始创建Bean
 			if (singletonObject == null) {
 				if (this.singletonsCurrentlyInDestruction) {
 					throw new BeanCreationNotAllowedException(beanName,
@@ -241,6 +249,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (logger.isDebugEnabled()) {
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
+				// serajoon singletonsCurrentlyInCreation.add(beanName)
 				beforeSingletonCreation(beanName);
 				boolean newSingleton = false;
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
@@ -272,9 +281,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
+					// serajoon this.singletonsCurrentlyInCreation.remove(beanName)
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
+					// serajoon beanNam创建完成,操作3级缓存
 					addSingleton(beanName, singletonObject);
 				}
 			}
