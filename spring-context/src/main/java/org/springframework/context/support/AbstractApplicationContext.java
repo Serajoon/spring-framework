@@ -582,6 +582,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected void prepareRefresh() {
 		this.startupDate = System.currentTimeMillis();
 		this.closed.set(false);
+		// serajoon 只有这一个地方设置active为true
 		this.active.set(true);
 
 		if (logger.isDebugEnabled()) {
