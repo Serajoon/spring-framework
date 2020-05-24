@@ -1625,7 +1625,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			if (beanInstance instanceof NullBean) {
 				return beanInstance;
 			}
-			// serajoon 判断的beanInstance是否是FactoryBean或其子类的实例
+			// serajoon name以&开头,但beanInstance不是FactoryBean或其子类的实例,则抛出异常
 			if (!(beanInstance instanceof FactoryBean)) {
 				throw new BeanIsNotAFactoryException(transformedBeanName(name), beanInstance.getClass());
 			}
@@ -1634,13 +1634,16 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// Now we have the bean instance, which may be a normal bean or a FactoryBean.
 		// If it's a FactoryBean, we use it to create a bean instance, unless the
 		// caller actually wants a reference to the factory.
-		// serajoon 如果name既不以&开头,beanInstance也不是FactoryBean或其子类的实例,则直接返回
+		// serajoon 到这可以确定beanInstance要么是一个正常bean,要么是一个FactoryBean实例
+		// 第一个条件:如果beanInstance不是FactoryBean或其子类的实例,则直接返回,因为不是FactoryBean那肯定就是正常的bean了
+		// 第二个条件:或者name以&开头,则直接返回
 		if (!(beanInstance instanceof FactoryBean) || BeanFactoryUtils.isFactoryDereference(name)) {
 			return beanInstance;
 		}
-
+		// serajoon 如果到这则beanInstance是FactoryBean类型,而且name不以&开头,返回FactoryBean.getObject产生的对象
 		Object object = null;
 		if (mbd == null) {
+			// serajoon 尝试从缓存获取
 			object = getCachedObjectForFactoryBean(beanName);
 		}
 		if (object == null) {
