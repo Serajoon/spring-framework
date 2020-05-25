@@ -822,6 +822,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		// Trigger initialization of all non-lazy singleton beans...
 		for (String beanName : beanNames) {
 			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
+			// serajoon 不是抽象类 是Singleton 不被@Lazy -->创建bean
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
 				// serajoon 判断是否实现FactoryBean接口
 				if (isFactoryBean(beanName)) {

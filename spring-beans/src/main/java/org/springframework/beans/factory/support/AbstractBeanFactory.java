@@ -1610,6 +1610,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 * Get the object for the given bean instance, either the bean
 	 * instance itself or its created object in case of a FactoryBean.
+	 * <br> serajoon
+	 * <br> 无论是从缓存中获得bean还是根据不同的scope策略加载bean.
+	 * <br> 总之,我们得到bean的实例后,要做的第一步就是调用这个方法来检测一下正确性,
+	 * <br> 其实就是检测获得Bean是不是FactoryBean类型的bean,如果是,
+	 * <br> 那么需要调用该bean对应的FactoryBean实例中的getObject()作为返回值
 	 * @param beanInstance the shared bean instance
 	 * @param name name that may include factory dereference prefix
 	 * @param beanName the canonical bean name
