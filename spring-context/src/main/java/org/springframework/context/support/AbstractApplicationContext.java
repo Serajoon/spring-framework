@@ -154,6 +154,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	static {
 		// Eagerly load the ContextClosedEvent class to avoid weird classloader issues
 		// on application shutdown in WebLogic 8.1. (Reported by Dustin Woods.)
+		// serajoon 为了避免应用程序在WebLogic8.1关闭的时候出现加载类加载异常的问题.
+		// 所以较早的加载这个ContextClosedEvent事件.暂时没有发现是干什么用的
 		ContextClosedEvent.class.getName();
 	}
 
@@ -834,11 +836,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/**
 	 * Finish the initialization of this context's bean factory,
 	 * initializing all remaining singleton beans.
-	 * <br>
-	 * serajoon<br>
-	 * Bean的生命周期在这完成<br>
-	 * 	1. 创建所有非懒加载的单例类<br>
-	 * 	2. invoke BeanPostProcessors
+	 * <br> serajoon
+	 * <br> Bean的生命周期在这完成
+	 * <br>		1. 创建所有非懒加载的单例类
+	 * <br>		2. invoke BeanPostProcessors
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// Initialize conversion service for this context.
