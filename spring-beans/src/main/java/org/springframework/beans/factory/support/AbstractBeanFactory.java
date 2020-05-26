@@ -238,7 +238,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@SuppressWarnings("unchecked")
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
-		//serajoon 验证bean的名字是否合法,带&,则去掉
+		//serajoon name可能是别名,也可能是工厂bean的name(带&前缀)
 		final String beanName = transformedBeanName(name);
 		Object bean;
 

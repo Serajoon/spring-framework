@@ -51,9 +51,16 @@ import org.springframework.util.Assert;
  * @see org.springframework.context.support.GenericXmlApplicationContext
  */
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
-
+	/**
+	 * serajoon
+	 * <br> 注解方式的bean定义扫描器
+	 */
 	private final AnnotatedBeanDefinitionReader reader;
 
+	/**
+	 * serajoon
+	 * <br> classpath类型的bean定义扫描器
+	 */
 	private final ClassPathBeanDefinitionScanner scanner;
 
 
