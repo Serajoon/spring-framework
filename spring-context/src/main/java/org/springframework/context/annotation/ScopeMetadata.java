@@ -33,7 +33,10 @@ import org.springframework.util.Assert;
  * @see ScopedProxyMode
  */
 public class ScopeMetadata {
-
+	/**
+	 * serajoon
+	 * <br> 默认是singleton
+	 */
 	private String scopeName = BeanDefinition.SCOPE_SINGLETON;
 
 	private ScopedProxyMode scopedProxyMode = ScopedProxyMode.NO;

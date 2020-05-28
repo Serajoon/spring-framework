@@ -76,6 +76,7 @@ public class AnnotationScopeMetadataResolver implements ScopeMetadataResolver {
 
 	@Override
 	public ScopeMetadata resolveScopeMetadata(BeanDefinition definition) {
+		// 默认是singleton
 		ScopeMetadata metadata = new ScopeMetadata();
 		if (definition instanceof AnnotatedBeanDefinition) {
 			AnnotatedBeanDefinition annDef = (AnnotatedBeanDefinition) definition;

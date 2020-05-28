@@ -52,7 +52,10 @@ public class AnnotatedBeanDefinitionReader {
 	private BeanNameGenerator beanNameGenerator = new AnnotationBeanNameGenerator();
 
 	private ScopeMetadataResolver scopeMetadataResolver = new AnnotationScopeMetadataResolver();
-
+	/**
+	 * serajoon
+	 * <br> ConditionEvaluator完成条件注解的判断,在后面的Spring Boot中有大量的应用
+	 */
 	private ConditionEvaluator conditionEvaluator;
 
 
@@ -221,6 +224,7 @@ public class AnnotatedBeanDefinitionReader {
 		abd.setInstanceSupplier(instanceSupplier);
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
 		abd.setScope(scopeMetadata.getScopeName());
+		// serajoon 获得beanName
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);

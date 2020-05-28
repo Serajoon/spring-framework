@@ -49,7 +49,8 @@ import org.springframework.util.PatternMatchUtils;
  *
  * <p>Also supports Java EE 6's {@link javax.annotation.ManagedBean} and
  * JSR-330's {@link javax.inject.Named} annotations, if available.
- *
+ * <br> serajoon
+ * <br> 将classpath下的类通过一定规则过滤后,将Class信息包装成BeanDefinition注册到IOC容器中
  * @author Mark Fisher
  * @author Juergen Hoeller
  * @author Chris Beams
@@ -136,7 +137,6 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	 */
 	public ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters,
 			Environment environment) {
-
 		this(registry, useDefaultFilters, environment,
 				(registry instanceof ResourceLoader ? (ResourceLoader) registry : null));
 	}
@@ -160,12 +160,15 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 			Environment environment, @Nullable ResourceLoader resourceLoader) {
 
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+		// serajoon 设置BeanDefinitionRegistry
 		this.registry = registry;
 
 		if (useDefaultFilters) {
+			// serajoon 使用默认的过滤规则
 			registerDefaultFilters();
 		}
 		setEnvironment(environment);
+		// serajoon 为容器设置资源加载器
 		setResourceLoader(resourceLoader);
 	}
 

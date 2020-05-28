@@ -217,6 +217,10 @@ public abstract class AnnotationConfigUtils {
 		return new BeanDefinitionHolder(definition, beanName);
 	}
 
+	/**
+	 * serajoon
+	 * <br> 最终都是返回的DefaultListableBeanFactory
+	 */
 	@Nullable
 	private static DefaultListableBeanFactory unwrapDefaultListableBeanFactory(BeanDefinitionRegistry registry) {
 		if (registry instanceof DefaultListableBeanFactory) {
@@ -230,6 +234,10 @@ public abstract class AnnotationConfigUtils {
 		}
 	}
 
+	/**
+	 * serajoon
+	 * <br> 处理通用注解,获得Lazy,Primary,DependsOn,Role,Description注解的属性,塞到BeanDefinition
+	 */
 	public static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd) {
 		processCommonDefinitionAnnotations(abd, abd.getMetadata());
 	}

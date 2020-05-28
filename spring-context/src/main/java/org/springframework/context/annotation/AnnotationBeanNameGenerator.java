@@ -76,6 +76,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 			}
 		}
 		// Fallback: generate a unique default bean name.
+		// serajoon 如果没有Component,ManagedBean,Named注解,则根据类名生成
 		return buildDefaultBeanName(definition, registry);
 	}
 
@@ -87,11 +88,13 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	@Nullable
 	protected String determineBeanNameFromAnnotation(AnnotatedBeanDefinition annotatedDef) {
 		AnnotationMetadata amd = annotatedDef.getMetadata();
+		// serajoon 获得该类的所有注解
 		Set<String> types = amd.getAnnotationTypes();
 		String beanName = null;
 		for (String type : types) {
 			AnnotationAttributes attributes = AnnotationConfigUtils.attributesFor(amd, type);
 			if (attributes != null && isStereotypeWithNameValue(type, amd.getMetaAnnotationTypes(type), attributes)) {
+				// serajoon 获得注解的value属性
 				Object value = attributes.get("value");
 				if (value instanceof String) {
 					String strVal = (String) value;
@@ -124,7 +127,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	 */
 	protected boolean isStereotypeWithNameValue(String annotationType,
 			Set<String> metaAnnotationTypes, @Nullable Map<String, Object> attributes) {
-
+		// 判断注解类型是否是Component,ManagedBean,Named
 		boolean isStereotype = annotationType.equals(COMPONENT_ANNOTATION_CLASSNAME) ||
 				metaAnnotationTypes.contains(COMPONENT_ANNOTATION_CLASSNAME) ||
 				annotationType.equals("javax.annotation.ManagedBean") ||

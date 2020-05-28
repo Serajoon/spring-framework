@@ -514,42 +514,53 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
+			// serajoon 1.记录启动时间,标记状态,检查变量
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+			// serajoon 2.初始化BeanFactory容器
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
+			// serajoon 3.添加BeanPostProcessor,手动注册几个特殊的 bean
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+				// serajoon 4.子类扩展点
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
-				//serajoon 5.执行所有Bean工厂的后置处理器,在该步骤中首先会去加载Bean定义,然后执行beanFactory的后置处理器
+				// serajoon 5.执行所有Bean工厂BeanFactoryPostProcessor的后置处理器,
+				// 在该步骤中首先会去加载Bean定义,然后执行beanFactory的后置处理器
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+				// serajoon 6.注册BeanPostProcessor的实现类
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
+				// serajoon 7.初始化MessageSource
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+				// serajoon 8.初始化事件广播器
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				// serajoon 9.子类扩展点,没有任何实现,空方法
 				onRefresh();
 
 				// Check for listener beans and register them.
+				// serajoon 10.注册时间监听器
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
-				// serajoon 11.完成所有单实例bean的创建及初始化
+				// serajoon 11.完成所有单例bean的创建及初始化
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				// serajoon 12.完成refresh(),发布广播事件
 				finishRefresh();
 			}
 
@@ -560,9 +571,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				}
 
 				// Destroy already created singletons to avoid dangling resources.
+				// serajoon 销毁已经初始化的的Bean
 				destroyBeans();
 
 				// Reset 'active' flag.
+				// serajoon 设置 active为false
 				cancelRefresh(ex);
 
 				// Propagate exception to caller.
@@ -572,6 +585,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			finally {
 				// Reset common introspection caches in Spring's core, since we
 				// might not ever need metadata for singleton beans anymore...
+				// serajoon 清除缓存
 				resetCommonCaches();
 			}
 		}

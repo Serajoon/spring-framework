@@ -94,8 +94,14 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 
 	private String resourcePattern = DEFAULT_RESOURCE_PATTERN;
 
+	/**
+	 * serajoon 要包含的注解集合,只有includeFilters中的注解,才会被扫描
+	 */
 	private final List<TypeFilter> includeFilters = new LinkedList<>();
 
+	/**
+	 * serajoon 要排除的注解集合,excludeFilters中的注解不会被扫描
+	 */
 	private final List<TypeFilter> excludeFilters = new LinkedList<>();
 
 	@Nullable
@@ -201,12 +207,15 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	 * <p>Also supports Java EE 6's {@link javax.annotation.ManagedBean} and
 	 * JSR-330's {@link javax.inject.Named} annotations, if available.
 	 *
+	 * <br> serajoon
+	 * <br> 注册默认的过滤规则,默认注解为Component,Controller,Service,Repository,ManagedBean,Named
 	 */
 	@SuppressWarnings("unchecked")
 	protected void registerDefaultFilters() {
 		this.includeFilters.add(new AnnotationTypeFilter(Component.class));
 		ClassLoader cl = ClassPathScanningCandidateComponentProvider.class.getClassLoader();
 		try {
+			// serajoon 添加@ManagedBean
 			this.includeFilters.add(new AnnotationTypeFilter(
 					((Class<? extends Annotation>) ClassUtils.forName("javax.annotation.ManagedBean", cl)), false));
 			logger.trace("JSR-250 'javax.annotation.ManagedBean' found and supported for component scanning");
@@ -215,6 +224,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 			// JSR-250 1.1 API (as included in Java EE 6) not available - simply skip.
 		}
 		try {
+			// serajoon 添加Named
 			this.includeFilters.add(new AnnotationTypeFilter(
 					((Class<? extends Annotation>) ClassUtils.forName("javax.inject.Named", cl)), false));
 			logger.trace("JSR-330 'javax.inject.Named' annotation found and supported for component scanning");

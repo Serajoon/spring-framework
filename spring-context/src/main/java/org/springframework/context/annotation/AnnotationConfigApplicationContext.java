@@ -59,7 +59,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 
 	/**
 	 * serajoon
-	 * <br> classpath类型的bean定义扫描器
+	 * <br> classpath下的BeanDefinition扫描器
 	 */
 	private final ClassPathBeanDefinitionScanner scanner;
 
