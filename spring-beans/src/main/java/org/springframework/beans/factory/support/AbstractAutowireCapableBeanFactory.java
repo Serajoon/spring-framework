@@ -503,6 +503,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
+			// serajoon 真正创建对象的地方
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isTraceEnabled()) {
 				logger.trace("Finished creating instance of bean '" + beanName + "'");
@@ -557,7 +558,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
 				try {
-					//serajoon 第三次调用后置处理器
+					//serajoon 第三次调用后置处理器,@AutoWired预解析
 					//通过后置处理器应用合并之后的bd
 					//把所有需要注入的元素拿出来存到一个集合中
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
@@ -1765,12 +1766,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
-			//serajoon 解析@PostConstruct
+			//serajoon 解析@PostConstruct,执行postProcessBeforeInitialization
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
 		try {
-			//serajoon 执行InitializingBean/init method
+			//serajoon 执行InitializingBean/init method(@Bean(initMethod = "xxx"))
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
 		catch (Throwable ex) {

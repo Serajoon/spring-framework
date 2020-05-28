@@ -150,7 +150,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	/**
 	 * serajoon
-	 * 目标bean的作用域,初始化为"",相当于singleton
+	 * 目标bean的作用域,初始化为""
 	 */
 	@Nullable
 	private String scope = SCOPE_DEFAULT;
