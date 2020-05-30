@@ -299,6 +299,7 @@ class ConfigurationClassParser {
 		}
 
 		// Process any @Import annotations
+		// serajoon 处理@Import注解,debug断点条件:sourceClass.toString().equals("包.类")
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
 		// Process any @ImportResource annotations
@@ -529,12 +530,15 @@ class ConfigurationClassParser {
 			throws IOException {
 
 		if (visited.add(sourceClass)) {
+			// serajoon sourceClass.getAnnotations():获得该类的注解集合
 			for (SourceClass annotation : sourceClass.getAnnotations()) {
+				// serajoon 获得注解的全限定名
 				String annName = annotation.getMetadata().getClassName();
 				if (!annName.startsWith("java") && !annName.equals(Import.class.getName())) {
 					collectImports(annotation, imports, visited);
 				}
 			}
+			// serajoon 将该类/注解上的@Import注解的属性放入imports集合中
 			imports.addAll(sourceClass.getAnnotationAttributes(Import.class.getName(), "value"));
 		}
 	}
