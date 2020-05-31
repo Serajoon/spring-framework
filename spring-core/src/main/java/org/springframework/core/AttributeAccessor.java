@@ -21,10 +21,9 @@ import org.springframework.lang.Nullable;
 /**
  * Interface defining a generic contract for attaching and accessing metadata
  * to/from arbitrary objects.
- * <br>
- * serajoon<br>
- * 定义了对对象元数据访问的抽象接口<br>
- * accessor:存取器 AttributeAccessor:属性存取器
+ * <br> serajoon
+ * <br> 定义了对对象元数据访问的抽象接口<br>
+ * <br> accessor:存取器 AttributeAccessor:属性存取器
  *
  * @author Rob Harrop
  * @since 2.0

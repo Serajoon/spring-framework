@@ -51,7 +51,7 @@ public abstract class AttributeAccessorSupport implements AttributeAccessor, Ser
 			this.attributes.put(name, value);
 		}
 		else {
-			//serajoon values是null,则删除该named对应的值
+			//serajoon values是null,则删除该name对应的值
 			removeAttribute(name);
 		}
 	}
