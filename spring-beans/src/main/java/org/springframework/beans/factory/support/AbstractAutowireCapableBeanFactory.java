@@ -433,8 +433,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throws BeansException {
 
 		Object result = existingBean;
+		// 遍历容器中所有的后置处理器
 		for (BeanPostProcessor processor : getBeanPostProcessors()) {
 			// serajoon 策略设计模式,实现了相同的接口,同一个方法有不同的实现
+			// aop和事务都在这生成代理对象
+			// aop @EnableAspectJAutoProxy
+			// @EnableAspectJAutoProxy导入AspectJAutoProxyRegistrar的Bean,继而注册AnnotationAwareAspectJAutoProxyCreator
+			// 而AnnotationAwareAspectJAutoProxyCreator实现了BeanPostProcessor接口
+			// aop debug断点: processor.getClass().getName().equals("org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator")
 			Object current = processor.postProcessAfterInitialization(result, beanName);
 			if (current == null) {
 				return result;
@@ -491,7 +497,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-			// serajoon 第一次调用后置处理器 aop
+			// serajoon
+			// 第一次调用后置处理器
+			// 通过bean的后置处理器进行后置处理,此处不生成代理对象,why?不管是jdk代理还是cglib都不会在此处进行代理,
+			// 因为真实的对象还没生成.那么这一步是我的aop和事务的关键在这里进行AOP切面信息的缓存
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -588,11 +597,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Initialize the bean instance.
 		Object exposedObject = bean;
 		try {
-			// serajoon 填充属性依赖注入
+			// serajoon 填充属性依赖注入(调用set方法赋值)
 			// 调用第五次和第六次后置处理器
 			// 判断是否需要完成属性注入,需要则完成注入
 			populateBean(beanName, mbd, instanceWrapper);
-			//serajoon 初始化spring 调用第七次和第八次后置处理器
+			// serajoon 初始化spring bean对象
+			// 调用第七次和第八次后置处理器
+			// 可能生成AOP代理对象
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
@@ -1766,7 +1777,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
-			//serajoon 解析@PostConstruct,执行postProcessBeforeInitialization
+			//serajoon 调用前置处理器,
+			// 解析@PostConstruct,执行postProcessBeforeInitialization
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
@@ -1780,7 +1792,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					beanName, "Invocation of init method failed", ex);
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
-			//serajoon 完成AOP代理,完成其余Aware回调
+			//serajoon 调用后置处理器,完成AOP代理,完成其余Aware回调
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 

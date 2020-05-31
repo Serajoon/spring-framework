@@ -44,6 +44,10 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 
 	private final AspectJAdvisorFactory advisorFactory;
 
+	/**
+	 * serajoon
+	 * <br> 用于缓存切面名称
+	 */
 	@Nullable
 	private volatile List<String> aspectBeanNames;
 
