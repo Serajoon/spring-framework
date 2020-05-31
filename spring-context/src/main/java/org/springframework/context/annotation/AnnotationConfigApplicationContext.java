@@ -91,9 +91,10 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... annotatedClasses) {
 		this();
-		//serajoon 关闭循环依赖,如果存在循环依赖,抛出异常
-		//setAllowCircularReferences(false);
+		// serajoon setAllowCircularReferences(false):关闭循环依赖,如果存在循环依赖,抛出异常
+		// 主要用来将配置类JavaConfig变为一个Bean定义对象，然后注册到Bean定义注册中心
 		register(annotatedClasses);
+		//serajoon 执行刷新的容器操作
 		refresh();
 	}
 

@@ -519,6 +519,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Tell the subclass to refresh the internal bean factory.
 			// serajoon 2.初始化BeanFactory容器
+			// 如果是通过注解的方式创建Spring容器,该步骤中会直接获取到在构造Spring容器对象时所创建的Bean工厂实例,
+			// 默认为DefaultListableBeanFactory类型.
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.

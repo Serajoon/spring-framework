@@ -69,6 +69,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	@Override
 	public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
 		if (definition instanceof AnnotatedBeanDefinition) {
+			// serajoon 根据相关注解获取注解中指定的bean name
 			String beanName = determineBeanNameFromAnnotation((AnnotatedBeanDefinition) definition);
 			if (StringUtils.hasText(beanName)) {
 				// Explicit bean name found.
@@ -117,7 +118,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	 *
 	 * <br>
 	 * serajoon<br>
-	 * 检查给定的注释是否是允许通过其注释值来给组件命名
+	 * 检查给定的注解是否是允许通过其注解值来给组件命名
 	 * 注解有value属性
 	 *
 	 * @param annotationType the name of the annotation class to check

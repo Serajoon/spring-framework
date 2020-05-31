@@ -161,7 +161,7 @@ public abstract class AnnotationConfigUtils {
 		}
 
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
-		// serajoon spring默认的BeanDefinition的注册,很重要,要理解每一个Bean类型
+		// serajoon 以下是spring默认的BeanDefinition的注册,很重要,要理解每一个Bean类型
 
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
