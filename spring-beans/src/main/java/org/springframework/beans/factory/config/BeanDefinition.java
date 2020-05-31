@@ -29,9 +29,12 @@ import org.springframework.lang.Nullable;
  * <p>This is just a minimal interface: The main intention is to allow a
  * {@link BeanFactoryPostProcessor} such as {@link PropertyPlaceholderConfigurer}
  * to introspect and modify property values and other bean metadata.
- * <br>
- * serajoon<br>
- * Spring使用BeanDefinition来描述bean的实例,bean的抽象
+ *
+ * <br> serajoon
+ * <br> spring使用BeanDefinition来描述bean的实例,是bean的抽象
+ * <br> 继承了AttributeAccessor->具有属性处理能力
+ * <br> 继承了BeanMetadataElement->说明它可以持有Bean元数据元素,作用是可以持有XML文件的一个bean标签对应的Object
+ * <br> 测试类:BeanDefinitionTests
  *
  * @author Juergen Hoeller
  * @author Rob Harrop

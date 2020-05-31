@@ -22,8 +22,8 @@ import org.springframework.lang.Nullable;
  * Interface to be implemented by bean metadata elements
  * that carry a configuration source object.
  *
- * serajoon
- * 用来获取元数据元素的配置源对象,用于传送配置源对象的超级接口
+ * <br> serajoon
+ * <br> 用来获取元数据元素的配置源对象,用于传送配置源对象的超级接口
  *
  * @author Juergen Hoeller
  * @since 2.0
