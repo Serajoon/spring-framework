@@ -88,7 +88,6 @@ public class AnnotatedBeanDefinitionReader {
 		this.registry = registry;
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
 		// serajoon 注册注解配置的处理器,注册一些常用的注解处理器
-
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
 

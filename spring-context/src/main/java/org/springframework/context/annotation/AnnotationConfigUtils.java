@@ -246,8 +246,13 @@ public abstract class AnnotationConfigUtils {
 		processCommonDefinitionAnnotations(abd, abd.getMetadata());
 	}
 
+	/**
+	 * serajoon
+	 * 处理通用注解@Lazy,@Primary,@DependsOn,@Role,设置BeanDefinition属性
+	 */
 	static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {
 		AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
+		// serajoon 如果有@Lazy,则调用setLazyInit设为注解的值
 		if (lazy != null) {
 			abd.setLazyInit(lazy.getBoolean("value"));
 		}
@@ -257,7 +262,7 @@ public abstract class AnnotationConfigUtils {
 				abd.setLazyInit(lazy.getBoolean("value"));
 			}
 		}
-
+		// serajoon 如果有@Primary,则设置autowiring自动注入的首选类型
 		if (metadata.isAnnotated(Primary.class.getName())) {
 			abd.setPrimary(true);
 		}

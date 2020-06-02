@@ -51,6 +51,7 @@ abstract class ConfigurationClassUtils {
 
 	private static final String CONFIGURATION_CLASS_LITE = "lite";
 
+	// serajoon CONFIGURATION_CLASS_ATTRIBUTE = org.springframework.context.annotation.ConfigurationClassPostProcessor.configurationClass
 	private static final String CONFIGURATION_CLASS_ATTRIBUTE =
 			Conventions.getQualifiedAttributeName(ConfigurationClassPostProcessor.class, "configurationClass");
 
@@ -111,7 +112,7 @@ abstract class ConfigurationClassUtils {
 				return false;
 			}
 		}
-
+		// serajoon 是否有@Configuration注解修饰
 		if (isFullConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}

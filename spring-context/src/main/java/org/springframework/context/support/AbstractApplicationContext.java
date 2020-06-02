@@ -524,12 +524,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
-			// serajoon 3.添加BeanPostProcessor,手动注册几个特殊的 bean
+			// serajoon 3.添加BeanPostProcessor,手动注册几个默认的bean
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
-				// serajoon 4.子类扩展点
+				// serajoon 4.子类扩展点  该方法默认为一个空实现,是留给开发人员的一个扩展点,等着子类实现
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
@@ -647,6 +647,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/**
 	 * Configure the factory's standard context characteristics,
 	 * such as the context's ClassLoader and post-processors.
+	 * <br> serajoon
+	 * <br> 配置工厂的标准上下文特征,例如上下文的类加载器和后处理器
+	 * <br> 1.指定Bean工厂的类加载器
 	 * @param beanFactory the BeanFactory to configure
 	 */
 	protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
@@ -656,7 +659,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
+		// serajoon 添加后置处理器ApplicationContextAwareProcessor
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+		// serajoon 忽略以下6个属性的自动注入,因为在ApplicationContextAwareProcessor的postProcessBeforeInitialization
+		// 中已经处理了
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
 		beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);
@@ -709,6 +715,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+		// serajoon
+		// 1.getBeanFactoryPostProcessors():拿到当前应用上下文beanFactoryPostProcessors变量中的值
+		// 2.invokeBeanFactoryPostProcessors:实例化并调用所有已注册的BeanFactoryPostProcessor
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime

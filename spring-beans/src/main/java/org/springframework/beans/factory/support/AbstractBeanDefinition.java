@@ -108,16 +108,16 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	/**
 	 * Constant that indicates dependency checking for object references.
-	 * serajoon
-	 * 检查除简单类型属性以及集合类型属性外的引用类型属性
+	 * <br> serajoon
+	 * <br> 检查除简单类型属性以及集合类型属性外的引用类型属性
 	 * @see #setDependencyCheck
 	 */
 	public static final int DEPENDENCY_CHECK_OBJECTS = 1;
 
 	/**
 	 * Constant that indicates dependency checking for "simple" properties.
-	 * serajoon
-	 * 检查简单类型属性以及集合类型属性
+	 * <br> serajoon
+	 * <br> 检查简单类型属性以及集合类型属性
 	 * @see #setDependencyCheck
 	 * @see org.springframework.beans.BeanUtils#isSimpleProperty
 	 */
