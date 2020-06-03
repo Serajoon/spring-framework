@@ -137,6 +137,7 @@ class ConfigurationClassBeanDefinitionReader {
 		if (configClass.isImported()) {
 			registerBeanDefinitionForImportedConfigurationClass(configClass);
 		}
+		// serajoon 循环遍历该配置类的所有@Bean信息
 		for (BeanMethod beanMethod : configClass.getBeanMethods()) {
 			loadBeanDefinitionsForBeanMethod(beanMethod);
 		}

@@ -228,7 +228,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
 		this.registriesPostProcessed.add(registryId);
-
+		// serajoon 加载所有configuration classes并解析得到对应的bean definition
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -329,6 +329,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
+			// serajoon
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 

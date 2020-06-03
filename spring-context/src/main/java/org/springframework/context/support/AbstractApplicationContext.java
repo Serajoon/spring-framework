@@ -514,55 +514,68 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
-			// serajoon 1.记录启动时间,标记状态,检查变量
+			// serajoon 1
+			// 记录启动时间,标记状态,检查变量
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
-			// serajoon 2.初始化BeanFactory容器
+			// serajoon 2
+			// 初始化BeanFactory容器
 			// 如果是通过注解的方式创建Spring容器,该步骤中会直接获取到在构造Spring容器对象时所创建的Bean工厂实例,
 			// 默认为DefaultListableBeanFactory类型.
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
-			// serajoon 3.添加BeanPostProcessor,手动注册几个默认的bean
+			// serajoon 3
+			// 添加BeanPostProcessor,手动注册几个默认的bean
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
-				// serajoon 4.子类扩展点  该方法默认为一个空实现,是留给开发人员的一个扩展点,等着子类实现
+				// serajoon 4
+				// 子类扩展点  该方法默认为一个空实现,是留给开发人员的一个扩展点,等着子类实现
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
-				// serajoon 5.执行所有Bean工厂BeanFactoryPostProcessor的后置处理器,
-				// 在该步骤中首先会去加载Bean定义,然后执行beanFactory的后置处理器
+				// serajoon 5
+				// 执行所有Bean工厂BeanFactoryPostProcessor的后置处理器,
+				// 在该步骤中首先会根据各种条件去加载Bean Definition,例如@@Conditional等
+				// 然后执行beanFactory的后置处理器
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
-				// serajoon 6.注册BeanPostProcessor的实现类
+				// serajoon 6
+				// 注册BeanPostProcessor的实现类
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
-				// serajoon 7.初始化MessageSource
+				// serajoon 7
+				// 初始化MessageSource
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
-				// serajoon 8.初始化事件广播器
+				// serajoon 8
+				// 初始化事件广播器
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
-				// serajoon 9.子类扩展点,没有任何实现,空方法
+				// serajoon 9
+				// 子类扩展点,没有任何实现,空方法
 				onRefresh();
 
 				// Check for listener beans and register them.
-				// serajoon 10.注册时间监听器
+				// serajoon 10
+				// 注册时间监听器
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
-				// serajoon 11.完成所有单例bean的创建及初始化
+				// serajoon 11
+				// 完成所有单例bean的创建及初始化
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
-				// serajoon 12.完成refresh(),发布广播事件
+				// serajoon 12
+				// 完成refresh(),发布广播事件
 				finishRefresh();
 			}
 
@@ -713,6 +726,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Instantiate and invoke all registered BeanFactoryPostProcessor beans,
 	 * respecting explicit order if given.
 	 * <p>Must be called before singleton instantiation.
+	 * <br> serajoon
+	 * <br> @Conditional判断
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 		// serajoon
