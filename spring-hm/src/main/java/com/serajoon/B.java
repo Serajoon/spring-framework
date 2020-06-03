@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-@Component("b")
+//@Component("b")
 public class B {
-	@Autowired
+//	@Autowired
     private A a;
 	public A getA() {
 		return a;

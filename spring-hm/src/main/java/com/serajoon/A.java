@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("a")
+//@Component("a")
 @Data
 public class A {
 	@Autowired
@@ -12,5 +12,9 @@ public class A {
 	public B getB() {
 		System.out.println("A.getB");
 		return b;
+	}
+
+	public void test(){
+		System.out.println("test");
 	}
 }

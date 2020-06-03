@@ -1,0 +1,14 @@
+package com.lifecycle;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class X {
+	@Autowired
+	private Y y;
+
+	public X() {
+		System.out.println("X构造方法, "+this);
+	}
+}
