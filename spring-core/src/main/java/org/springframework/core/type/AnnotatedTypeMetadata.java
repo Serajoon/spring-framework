@@ -39,10 +39,10 @@ import org.springframework.util.MultiValueMap;
 public interface AnnotatedTypeMetadata {
 
 	/**
-	 * serajoon<br/>
-	 * 此元素是否标注有annotationName注解<br/>
-	 * annotationName:注解全类名<br/>
-	 * <br/>
+	 * <br> serajoon
+	 * <br> 此元素是否标注有annotationName注解
+	 * <br> annotationName:注解全类名
+	 * <br>
 	 *
 	 * Determine whether the underlying element has an annotation or meta-annotation
 	 * of the given type defined.
@@ -75,8 +75,9 @@ public interface AnnotatedTypeMetadata {
 
 	/**
 	 *
-	 * serajoon<br/>
-	 * classValuesAsString:true:将class转换为string,默认为false<br/>
+	 * <br> serajoon
+	 * <br> classValuesAsString: true:将class转换为string,默认为false.
+	 * <br> classValuesAsString: 若是true表示Class用它的字符串的全类名来表示,这样可以避免Class被提前加载
 	 * <br/>
 	 *
 	 * Retrieve the attributes of the annotation of the given type, if any (i.e. if

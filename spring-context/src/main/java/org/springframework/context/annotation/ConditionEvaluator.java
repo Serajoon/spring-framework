@@ -40,9 +40,8 @@ import org.springframework.util.MultiValueMap;
 
 /**
  * Internal class used to evaluate {@link Conditional} annotations.
- * <br>
- * serajoon<br>
- * 对注解Conditional的解s析器
+ * <br> serajoon
+ * <br> 对注解Conditional的解析器,评估有Conditional注解的类是否需要跳过
  *
  * @author Phillip Webb
  * @author Juergen Hoeller
@@ -85,8 +84,10 @@ class ConditionEvaluator {
 		if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) {
 			return false;
 		}
-
+		// serajoon 如果phase是null,则判断当前是应该解析还是注册
 		if (phase == null) {
+			// serajoon bean的注解信息封装对象是AnnotationMetadata类型并且,
+			// 类上有@Configuration,@Component,@ComponentScan,@Import,@ImportResource,@Bean,则表示为解析类型
 			if (metadata instanceof AnnotationMetadata &&
 					ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) {
 				return shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);

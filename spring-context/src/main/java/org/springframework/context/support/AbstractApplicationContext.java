@@ -539,7 +539,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// Invoke factory processors registered as beans in the context.
 				// serajoon 5
 				// 执行所有Bean工厂BeanFactoryPostProcessor的后置处理器,
-				// 在该步骤中首先会根据各种条件去加载Bean Definition,例如@@Conditional等
+				// 在该步骤中首先会根据各种条件去加载Bean Definition,例如@Conditional等
 				// 然后执行beanFactory的后置处理器
 				invokeBeanFactoryPostProcessors(beanFactory);
 

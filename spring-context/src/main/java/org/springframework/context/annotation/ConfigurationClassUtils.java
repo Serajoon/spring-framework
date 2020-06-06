@@ -146,6 +146,8 @@ abstract class ConfigurationClassUtils {
 	/**
 	 * Check the given metadata for a full configuration class candidate
 	 * (i.e. a class annotated with {@code @Configuration}).
+	 * <br> serajoon
+	 * <br> 判断是否有@Configuration,自定义的注解中有@Configuration也为true
 	 * @param metadata the metadata of the annotated class
 	 * @return {@code true} if the given class is to be processed as a full
 	 * configuration class, including cross-method call interception

@@ -36,6 +36,8 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	/**
 	 * Get the fully qualified class names of all annotation types that
 	 * are <em>present</em> on the underlying class.
+	 * <br> serajoon
+	 * <br> 拿到当前类上所有的注解的全类名(注意是全类名)
 	 * @return the annotation type names
 	 */
 	Set<String> getAnnotationTypes();
@@ -70,6 +72,8 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	/**
 	 * Determine whether the underlying class has any methods that are
 	 * annotated (or meta-annotated) with the given annotation type.
+	 * <br> serajoon
+	 * <br> 类里面只有有一个方法标注有指定注解,就返回true
 	 * @param annotationName the fully qualified class name of the annotation
 	 * type to look for
 	 */
@@ -80,6 +84,8 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	 * (or meta-annotated) with the given annotation type.
 	 * <p>For any returned method, {@link MethodMetadata#isAnnotated} will
 	 * return {@code true} for the given annotation type.
+	 * <br> serajoon
+	 * <br> 返回所有的标注有指定注解的方法元信息,注意返回的是MethodMetadata,原理基本同上
 	 * @param annotationName the fully qualified class name of the annotation
 	 * type to look for
 	 * @return a set of {@link MethodMetadata} for methods that have a matching
