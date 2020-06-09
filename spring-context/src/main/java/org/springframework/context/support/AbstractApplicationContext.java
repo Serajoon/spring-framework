@@ -527,7 +527,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Prepare the bean factory for use in this context.
 			// serajoon 3
-			// 添加BeanPostProcessor,手动注册几个默认的bean
+			// 添加BeanPostProcessor,手动注册几个默认的bean(environment,systemProperties,systemEnvironment)
+			//
 			prepareBeanFactory(beanFactory);
 
 			try {
@@ -539,8 +540,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// Invoke factory processors registered as beans in the context.
 				// serajoon 5
 				// 执行所有Bean工厂BeanFactoryPostProcessor的后置处理器,
-				// 在该步骤中首先会根据各种条件去加载Bean Definition,例如@Conditional等
-				// 然后执行beanFactory的后置处理器
+				// 在该步骤中首先会根据各种条件去加载Bean Definition
+				// 然后执行beanFactory的后置处理器,Spring IoC容器允许BeanFactoryPostProcessor
+				// 在容器实例化任何bean之前读取bean的定义,并可以修改它
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
@@ -550,7 +552,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Initialize message source for this context.
 				// serajoon 7
-				// 初始化MessageSource
+				// 初始化MessageSource,处理国际化
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
@@ -662,7 +664,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * such as the context's ClassLoader and post-processors.
 	 * <br> serajoon
 	 * <br> 配置工厂的标准上下文特征,例如上下文的类加载器和后处理器
-	 * <br> 1.指定Bean工厂的类加载器
+	 * <br> 1.注册默认的bean(environment,systemProperties,systemEnvironment)
+	 * <br> 2.注册2个bean后置处理器:ApplicationContextAwareProcessor和ApplicationListenerDetector
 	 * @param beanFactory the BeanFactory to configure
 	 */
 	protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
@@ -701,12 +704,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Register default environment beans.
+		// serajoon 注册默认的bean
+		// 1.environment
 		if (!beanFactory.containsLocalBean(ENVIRONMENT_BEAN_NAME)) {
 			beanFactory.registerSingleton(ENVIRONMENT_BEAN_NAME, getEnvironment());
 		}
+		// 2.systemProperties
 		if (!beanFactory.containsLocalBean(SYSTEM_PROPERTIES_BEAN_NAME)) {
 			beanFactory.registerSingleton(SYSTEM_PROPERTIES_BEAN_NAME, getEnvironment().getSystemProperties());
 		}
+		// 3.systemEnvironment
 		if (!beanFactory.containsLocalBean(SYSTEM_ENVIRONMENT_BEAN_NAME)) {
 			beanFactory.registerSingleton(SYSTEM_ENVIRONMENT_BEAN_NAME, getEnvironment().getSystemEnvironment());
 		}
@@ -728,10 +735,15 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Must be called before singleton instantiation.
 	 * <br> serajoon
 	 * <br> @Conditional判断
+	 * <br> 整个invokeBeanFactoryPostProcessors方法围绕两个接口,
+	 * <br> BeanDefinitionRegistryPostProcessor和BeanFactoryPostProcessor,
+	 * <br> 其中BeanDefinitionRegistryPostProcessor继承了BeanFactoryPostProcessor.
+	 * <br> BeanDefinitionRegistryPostProcessor主要用来在常规BeanFactoryPostProcessor检测开始之前注册其他Bean定义,
+	 * <br> 说的简单点,就是BeanDefinitionRegistryPostProcessor具有更高的优先级,执行顺序在BeanFactoryPostProcessor之前
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 		// serajoon
-		// 1.getBeanFactoryPostProcessors():拿到当前应用上下文beanFactoryPostProcessors变量中的值
+		// 1.getBeanFactoryPostProcessors():拿到当前应用上下文已经注册的beanFactoryPostProcessors,默认情况下,返回空
 		// 2.invokeBeanFactoryPostProcessors:实例化并调用所有已注册的BeanFactoryPostProcessor
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
@@ -747,6 +759,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Instantiate and invoke all registered BeanPostProcessor beans,
 	 * respecting explicit order if given.
 	 * <p>Must be called before any instantiation of application beans.
+	 * <br> serajoon
+	 * <br> 将所有实现了BeanPostProcessor接口的类加载到BeanFactory中
 	 */
 	protected void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 		PostProcessorRegistrationDelegate.registerBeanPostProcessors(beanFactory, this);

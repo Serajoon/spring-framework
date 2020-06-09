@@ -259,11 +259,14 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * {@link Configuration} classes.
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
+		// serajoon 候选的配置类集合
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
+		// serajoon 获取IOC容器中目前所有Bean定义的名称
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
+			// serajoon 判断有没有被解析过
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
 					ConfigurationClassUtils.isLiteConfigurationClass(beanDef)) {
 				if (logger.isDebugEnabled()) {
@@ -281,6 +284,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 
 		// Return immediately if no @Configuration classes were found
+		// serajoon 如果没有标注为@Configuration的配置类,则直接返回
 		if (configCandidates.isEmpty()) {
 			return;
 		}

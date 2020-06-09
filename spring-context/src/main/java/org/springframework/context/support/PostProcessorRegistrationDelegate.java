@@ -51,18 +51,34 @@ final class PostProcessorRegistrationDelegate {
 	private PostProcessorRegistrationDelegate() {
 	}
 
-
+	/**
+	 * serajoon
+	 * <br> 如果不采用手动增加的方式,而是由Spring自己管理,则beanFactoryPostProcessors.size总是0
+	 * <br> 如何进行手动增加BeanFactoryPostProcessor
+	 * <pre>
+	 * AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+	 * context.register(ConditionMain.class);
+	 * //手动增加自己的BeanFactoryPostProcessor
+	 * context.addBeanFactoryPostProcessor(new MyBeanFactoryPostProcessor());
+	 * context.refresh();
+	 * </pre>
+	 * @param beanFactory bean工厂
+	 * @param beanFactoryPostProcessors 手动注册的BeanFactoryPostProcessor
+	 */
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
+		// serajoon 代表了一个已经处理过的Bean的容器,防止重复执行
 		Set<String> processedBeans = new HashSet<>();
 
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
+			// serajoon 用于存放普通的BeanFactoryPostProcessor
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
+			// serajoon 用于存放BeanDefinitionRegistryPostProcessor
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
-
+			// serajoon 处理手动注册的BeanFactoryPostProcessor
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
@@ -79,23 +95,36 @@ final class PostProcessorRegistrationDelegate {
 			// uninitialized to let the bean factory post-processors apply to them!
 			// Separate between BeanDefinitionRegistryPostProcessors that implement
 			// PriorityOrdered, Ordered, and the rest.
+			// serajoon 用于保存本次要执行的BeanDefinitionRegistryPostProcessor,临时的,用完clear
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
+			// serajoon 找出所有实现BeanDefinitionRegistryPostProcessor接口的Bean的beanName
+			// 初始化时spring定义的和配置类中实现该接口的,其他的需要通过配置类扫描以后才处理
+			// org.springframework.context.annotation.internalConfigurationAnnotationProcessor->ConfigurationClassPostProcessor
+			// 通常就一个ConfigurationClassPostProcessor,因为我们自定的BeanDefinitionRegistryPostProcessor还没有被加入到Spring容器中去
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
+				// serajoon 校验是否实现了PriorityOrdered接口
 				if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
+					// serajoon 如果ppName是PriorityOrdered类型,则在singleton中添加
+					// 例如org.springframework.context.annotation.internalConfigurationAnnotationProcessor
+					// beanFactory.getBean会触发创建ppName对应的bean对象
 					currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
 					processedBeans.add(ppName);
 				}
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
+			// serajoon bean定义的扫描,加载
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
+			// serajoon 调用所有实现了Ordered接口的BeanDefinitionRegistryPostProcessor实现类(过程跟上面的步骤基本一样)
+			// 这边重复查找是因为执行完上面的BeanDefinitionRegistryPostProcessor,
+			// 可能会新增了其他的BeanDefinitionRegistryPostProcessor,,因此需要重新查找
 			postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
 				if (!processedBeans.contains(ppName) && beanFactory.isTypeMatch(ppName, Ordered.class)) {
@@ -109,6 +138,8 @@ final class PostProcessorRegistrationDelegate {
 			currentRegistryProcessors.clear();
 
 			// Finally, invoke all other BeanDefinitionRegistryPostProcessors until no further ones appear.
+			// serajoon 调用所有剩下的BeanDefinitionRegistryPostProcessors
+			// reiterate:反复地做
 			boolean reiterate = true;
 			while (reiterate) {
 				reiterate = false;
@@ -117,6 +148,8 @@ final class PostProcessorRegistrationDelegate {
 					if (!processedBeans.contains(ppName)) {
 						currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
 						processedBeans.add(ppName);
+						// 如果有BeanDefinitionRegistryPostProcessor被执行,,则有可能会产生新的BeanDefinitionRegistryPostProcessor,
+						// 因此这边将reiterate赋值为true,代表需要再循环查找一次
 						reiterate = true;
 					}
 				}
@@ -135,6 +168,8 @@ final class PostProcessorRegistrationDelegate {
 			// Invoke factory processors registered with the context instance.
 			invokeBeanFactoryPostProcessors(beanFactoryPostProcessors, beanFactory);
 		}
+		// serajoon 到这里,入参beanFactoryPostProcessors和容器中的所有BeanDefinitionRegistryPostProcessor已经全部处理完毕,
+		// 下面开始处理容器中的所有BeanFactoryPostProcessor
 
 		// Do not initialize FactoryBeans here: We need to leave all regular beans
 		// uninitialized to let the bean factory post-processors apply to them!
@@ -143,8 +178,11 @@ final class PostProcessorRegistrationDelegate {
 
 		// Separate between BeanFactoryPostProcessors that implement PriorityOrdered,
 		// Ordered, and the rest.
+		// serajoon 用于存放实现了PriorityOrdered接口的BeanFactoryPostProcessor
 		List<BeanFactoryPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
+		// serajoon 用于存放实现了Ordered接口的BeanFactoryPostProcessor的beanName
 		List<String> orderedPostProcessorNames = new ArrayList<>();
+		// serajoon 用于存放普通BeanFactoryPostProcessor的beanName
 		List<String> nonOrderedPostProcessorNames = new ArrayList<>();
 		for (String ppName : postProcessorNames) {
 			if (processedBeans.contains(ppName)) {
