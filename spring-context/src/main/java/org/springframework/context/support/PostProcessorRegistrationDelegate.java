@@ -102,7 +102,7 @@ final class PostProcessorRegistrationDelegate {
 			// serajoon 找出所有实现BeanDefinitionRegistryPostProcessor接口的Bean的beanName
 			// 初始化时spring定义的和配置类中实现该接口的,其他的需要通过配置类扫描以后才处理
 			// org.springframework.context.annotation.internalConfigurationAnnotationProcessor->ConfigurationClassPostProcessor
-			// 通常就一个ConfigurationClassPostProcessor,因为我们自定的BeanDefinitionRegistryPostProcessor还没有被加入到Spring容器中去
+			// 通常就一个ConfigurationClassPostProcessor,因为我们自定的BeanDefinitionRegistryPostProcessor还没有被加入到Spring容器中
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {

@@ -745,6 +745,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// serajoon
 		// 1.getBeanFactoryPostProcessors():拿到当前应用上下文已经注册的beanFactoryPostProcessors,默认情况下,返回空
 		// 2.invokeBeanFactoryPostProcessors:实例化并调用所有已注册的BeanFactoryPostProcessor
+		// 3.delegate:代表
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime

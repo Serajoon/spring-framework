@@ -112,7 +112,7 @@ abstract class ConfigurationClassUtils {
 				return false;
 			}
 		}
-		// serajoon 是否有@Configuration注解修饰
+		// serajoon 是否有@Configuration注解修饰->full 整个spring只有这个地方用到了设置该属性
 		if (isFullConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
