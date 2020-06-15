@@ -2,14 +2,17 @@ package com.condition;
 
 import org.springframework.context.annotation.*;
 
-import javax.crypto.Mac;
 
 @Configuration
 @ComponentScan("com.condition")
 public class ConditionMain {
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ConditionMain.class);
-//		LinuxCondition bean = context.getBean(LinuxCondition.class);
+		MySys bean = context.getBean(MySys.class);
+		System.out.println(bean);
+		System.out.println(context.getBean("person", Person.class));
+		System.out.println(context.getBean("person", Person.class));
+		System.out.println(context.getBean("person", Person.class));
 
 	}
 
@@ -33,4 +36,6 @@ public class ConditionMain {
 		System.out.println("mac");
 		return new MySys("Mac");
 	}
+
+	private static class A{}
 }
