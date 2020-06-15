@@ -213,12 +213,17 @@ class ConfigurationClassParser {
 		return this.configurationClasses.keySet();
 	}
 
-
+	/**
+	 * serajoon 真正处理@Configuration
+	 * 通过此配置类继续找到其他的配置类,其他的配置类就属于被导入的配置类
+	 */
 	protected void processConfigurationClass(ConfigurationClass configClass) throws IOException {
+		// serajoon 处理@Conditional,判断此configClass是否应该被跳过
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
 		}
-
+		// serajoon 判断同一个配置类是否重复加载过,如果重复加载过,则合并,否则从集合中移除旧的配置类,后续逻辑将处理新的配置类
+		// 两次都属于被导入的则合并导入类,返回,如果配置类不是被导入的,则移除旧使用新的配置类
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
 		if (existingClass != null) {
 			if (configClass.isImported()) {
@@ -237,8 +242,10 @@ class ConfigurationClassParser {
 		}
 
 		// Recursively process the configuration class and its superclass hierarchy.
+		// serajoon 递归处理configuration类及其超类
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
+			// serajoon 从配置类解析一切可能的bean形式,内部类,成员方法,@Import等,返回值为父类,继续解析父类直到为null
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
@@ -260,6 +267,7 @@ class ConfigurationClassParser {
 
 		if (configClass.getMetadata().isAnnotated(Component.class.getName())) {
 			// Recursively process any member (nested) classes first
+			// serajoon 递归处理内部类
 			processMemberClasses(configClass, sourceClass);
 		}
 
@@ -964,6 +972,7 @@ class ConfigurationClassParser {
 			if (sourceToProcess instanceof Class) {
 				Class<?> sourceClass = (Class<?>) sourceToProcess;
 				try {
+					// serajoon 得到该类所有的内部类,除去父类的
 					Class<?>[] declaredClasses = sourceClass.getDeclaredClasses();
 					List<SourceClass> members = new ArrayList<>(declaredClasses.length);
 					for (Class<?> declaredClass : declaredClasses) {
