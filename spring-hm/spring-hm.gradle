@@ -2,7 +2,7 @@ description = "mine"
 
 dependencies {
     compile(project(":spring-context"))
-    compile(project(":spring-webmvc"))
+//    compile(project(":spring-webmvc"))
     //aspect
     compile("org.springframework:spring-aspects:5.1.2.RELEASE")
     //aop
