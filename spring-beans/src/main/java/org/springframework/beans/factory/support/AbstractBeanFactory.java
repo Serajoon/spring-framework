@@ -333,6 +333,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				else if (mbd.isPrototype()) {
+					//serajoon 原型模式,创建新的对象
 					// It's a prototype -> create a new instance.
 					Object prototypeInstance = null;
 					try {
