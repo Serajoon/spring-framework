@@ -284,7 +284,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 
 		// Return immediately if no @Configuration classes were found
-		// serajoon 如果没有标注为@Configuration的配置类,则直接返回
+		// serajoon 如果没有full/lite配置类,则直接返回
 		if (configCandidates.isEmpty()) {
 			return;
 		}

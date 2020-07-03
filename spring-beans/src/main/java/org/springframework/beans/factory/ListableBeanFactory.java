@@ -49,6 +49,9 @@ import org.springframework.lang.Nullable;
  * and {@code containsBeanDefinition}, the methods in this interface
  * are not designed for frequent invocation. Implementations may be slow.
  *
+ * <br> serajoon
+ * <br> 根据条件返回Bean的集合
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 16 April 2001
@@ -163,8 +166,8 @@ public interface ListableBeanFactory extends BeanFactory {
 	 * order of definition</i> in the backend configuration, as far as possible.
 	 * <br> serajoon
 	 * <br> type:表示要查找的bean的类型
-	 * <br> includeNonSingletons:是否考虑非单例bean
-	 * <br> allowEagerInit:是否允许提早初始化
+	 * <br> includeNonSingletons:是否包含非单例bean. false:只取单例的
+	 * <br> allowEagerInit:是否允许提早初始化.
 	 * @param type the class or interface to match, or {@code null} for all bean names
 	 * @param includeNonSingletons whether to include prototype or scoped beans too
 	 * or just singletons (also applies to FactoryBeans)
