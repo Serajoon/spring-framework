@@ -52,7 +52,7 @@ final class PostProcessorRegistrationDelegate {
 	}
 
 	/**
-	 * serajoon
+	 * serajoon.
 	 * <br> 如果不采用手动增加的方式,而是由Spring自己管理,则beanFactoryPostProcessors.size总是0
 	 * <br> 如何进行手动增加BeanFactoryPostProcessor
 	 * <pre>

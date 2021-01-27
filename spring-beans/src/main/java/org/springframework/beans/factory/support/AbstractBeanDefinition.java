@@ -149,7 +149,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	private volatile Object beanClass;
 
 	/**
-	 * serajoon
+	 * serajoon.
 	 * 目标bean的作用域,初始化为""
 	 */
 	@Nullable

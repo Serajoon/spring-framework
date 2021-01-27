@@ -30,20 +30,20 @@ import org.springframework.util.ObjectUtils;
  */
 public class BeanMetadataAttribute implements BeanMetadataElement {
 	/**
-	 * serajoon
+	 * serajoon.
 	 * <br> 属性名
 	 */
 	private final String name;
 
 	/**
-	 * serajoon
+	 * serajoon.
 	 * <br> 属性值
 	 */
 	@Nullable
 	private final Object value;
 
 	/**
-	 * serajoon
+	 * serajoon.
 	 * <br> 属性所属对象
 	 */
 	@Nullable

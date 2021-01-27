@@ -34,7 +34,7 @@ import org.springframework.util.Assert;
  */
 public class ScopeMetadata {
 	/**
-	 * serajoon
+	 * serajoon.
 	 * <br> 默认是singleton
 	 */
 	private String scopeName = BeanDefinition.SCOPE_SINGLETON;

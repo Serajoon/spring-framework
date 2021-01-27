@@ -53,7 +53,7 @@ public class AnnotatedBeanDefinitionReader {
 
 	private ScopeMetadataResolver scopeMetadataResolver = new AnnotationScopeMetadataResolver();
 	/**
-	 * serajoon
+	 * serajoon.
 	 * <br> ConditionEvaluator完成条件注解的判断,在后面的Spring Boot中有大量的应用
 	 */
 	private ConditionEvaluator conditionEvaluator;

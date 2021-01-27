@@ -222,7 +222,7 @@ public abstract class AnnotationConfigUtils {
 	}
 
 	/**
-	 * serajoon
+	 * serajoon.
 	 * <br> 最终都是返回的DefaultListableBeanFactory
 	 */
 	@Nullable
@@ -239,7 +239,7 @@ public abstract class AnnotationConfigUtils {
 	}
 
 	/**
-	 * serajoon
+	 * serajoon.
 	 * <br> 处理通用注解,获得Lazy,Primary,DependsOn,Role,Description注解的属性,塞到BeanDefinition
 	 */
 	public static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd) {
@@ -247,7 +247,7 @@ public abstract class AnnotationConfigUtils {
 	}
 
 	/**
-	 * serajoon
+	 * serajoon.
 	 * 处理通用注解@Lazy,@Primary,@DependsOn,@Role,设置BeanDefinition属性
 	 */
 	static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {

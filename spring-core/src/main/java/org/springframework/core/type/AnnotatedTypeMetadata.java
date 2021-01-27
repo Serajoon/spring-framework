@@ -39,7 +39,7 @@ import org.springframework.util.MultiValueMap;
 public interface AnnotatedTypeMetadata {
 
 	/**
-	 * <br> serajoon
+	 * <br> serajoon.
 	 * <br> 此元素是否标注有annotationName注解
 	 * <br> annotationName:注解全类名
 	 * <br>
@@ -56,7 +56,7 @@ public interface AnnotatedTypeMetadata {
 	boolean isAnnotated(String annotationName);
 
 	/**
-	 * serajoon<br/>
+	 * serajoon<br/>.
 	 * 得指定类型注解的所有的(属性-值)(k-v)<br/>
 	 * annotationName:注解的全限定名<br/>
 	 * <br/>
@@ -75,7 +75,7 @@ public interface AnnotatedTypeMetadata {
 
 	/**
 	 *
-	 * <br> serajoon
+	 * <br> serajoon.
 	 * <br> classValuesAsString: true:将class转换为string,默认为false.
 	 * <br> classValuesAsString: 若是true表示Class用它的字符串的全类名来表示,这样可以避免Class被提前加载
 	 * <br/>

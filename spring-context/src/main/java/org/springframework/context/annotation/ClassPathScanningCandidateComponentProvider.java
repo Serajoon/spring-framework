@@ -95,12 +95,12 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	private String resourcePattern = DEFAULT_RESOURCE_PATTERN;
 
 	/**
-	 * serajoon 要包含的注解集合,只有includeFilters中的注解,才会被扫描
+	 * serajoon 要包含的注解集合,只有includeFilters中的注解,才会被扫描.
 	 */
 	private final List<TypeFilter> includeFilters = new LinkedList<>();
 
 	/**
-	 * serajoon 要排除的注解集合,excludeFilters中的注解不会被扫描
+	 * serajoon 要排除的注解集合,excludeFilters中的注解不会被扫描.
 	 */
 	private final List<TypeFilter> excludeFilters = new LinkedList<>();
 

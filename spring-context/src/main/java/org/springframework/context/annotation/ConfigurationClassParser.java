@@ -214,8 +214,8 @@ class ConfigurationClassParser {
 	}
 
 	/**
-	 * serajoon 真正处理@Configuration
-	 * 通过此配置类继续找到其他的配置类,其他的配置类就属于被导入的配置类
+	 * serajoon 真正处理@Configuration.
+	 * 通过此配置类继续找到其他的配置类,其他的配置类就属于被导入的配置类.
 	 */
 	protected void processConfigurationClass(ConfigurationClass configClass) throws IOException {
 		// serajoon 处理@Conditional,判断此configClass是否应该被跳过
