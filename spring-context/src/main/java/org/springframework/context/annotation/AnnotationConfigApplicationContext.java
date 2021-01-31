@@ -53,13 +53,13 @@ import org.springframework.util.Assert;
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
 	/**
 	 * serajoon.
-	 * <br> 注解方式的bean定义扫描器
+	 * <p> 注解方式的bean定义扫描器
 	 */
 	private final AnnotatedBeanDefinitionReader reader;
 
 	/**
 	 * serajoon.
-	 * <br> classpath下的BeanDefinition扫描器
+	 * <p> classpath下的BeanDefinition扫描器.
 	 */
 	private final ClassPathBeanDefinitionScanner scanner;
 
@@ -69,6 +69,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+		// serajoon
+		// 1. 创建一个读取注解的Bean定义读取器
+		// 2. 创建一个扫描classpath路径下的BeanDefinition扫描器
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
@@ -90,8 +93,10 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * e.g. {@link Configuration @Configuration} classes
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... annotatedClasses) {
+		// serajoon
+		// 有父类GenericApplicationContext,调用父类构造方法初始化BeanFactory DefaultListableBeanFactory
 		this();
-		// serajoon setAllowCircularReferences(false):关闭循环依赖,如果存在循环依赖,抛出异常
+		// setAllowCircularReferences(false):关闭循环依赖,如果存在循环依赖,抛出异常
 		// 主要用来将配置类JavaConfig变为一个Bean定义对象，然后注册到Bean定义注册中心
 		register(annotatedClasses);
 		//serajoon 执行刷新的容器操作

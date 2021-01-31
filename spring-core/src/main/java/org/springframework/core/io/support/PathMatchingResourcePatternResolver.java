@@ -277,9 +277,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	@Override
 	public Resource[] getResources(String locationPattern) throws IOException {
 		Assert.notNull(locationPattern, "Location pattern must not be null");
+		// serajoon 判断是否是classpath*:开头
 		if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {
 			// a class path resource (multiple resources for same name possible)
 			if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
+				// serajoon 去掉classpath*:,而且是Ant-style Path
 				// a class path resource pattern
 				return findPathMatchingResources(locationPattern);
 			}
@@ -295,6 +297,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 					locationPattern.indexOf(':') + 1);
 			if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
 				// a file pattern
+				// serajoon 是Ant-Style Path
 				return findPathMatchingResources(locationPattern);
 			}
 			else {

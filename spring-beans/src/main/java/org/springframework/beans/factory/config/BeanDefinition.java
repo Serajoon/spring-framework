@@ -30,11 +30,12 @@ import org.springframework.lang.Nullable;
  * {@link BeanFactoryPostProcessor} such as {@link PropertyPlaceholderConfigurer}
  * to introspect and modify property values and other bean metadata.
  *
- * <br> serajoon
- * <br> spring使用BeanDefinition来描述bean的实例,是bean的抽象
- * <br> 继承了AttributeAccessor->具有属性处理能力
- * <br> 继承了BeanMetadataElement->说明它可以持有Bean元数据元素,作用是可以持有XML文件的一个bean标签对应的Object
- * <br> 测试类:BeanDefinitionTests
+ * <p> serajoon
+ * <p> spring使用BeanDefinition来描述bean的实例,是bean的抽象,相当于java中的class
+ * <p> Class可以用来描述一个类的属性和方法等等其他信息,BeanDefinition可以描述bean的scope,lazy,以及属性和方法等等其他信息
+ * <p> 继承了AttributeAccessor->具有属性处理能力
+ * <p> 继承了BeanMetadataElement->说明它可以持有Bean元数据元素,作用是可以持有XML文件的一个bean标签对应的Object
+ * <p> 测试类:BeanDefinitionTests
  *
  * @author Juergen Hoeller
  * @author Rob Harrop
@@ -65,8 +66,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	/**
 	 * Role hint indicating that a {@code BeanDefinition} is a major part
 	 * of the application. Typically corresponds to a user-defined bean.
-	 * <br> serajoon
-	 * <br> 这个Bean是用户的,是从配置文件中过来的
+	 * <p> serajoon
+	 * <p> 这个Bean是用户的,是从配置文件中过来的
 	 */
 	int ROLE_APPLICATION = 0;
 
@@ -86,8 +87,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * entirely background role and has no relevance to the end-user. This hint is
 	 * used when registering beans that are completely part of the internal workings
 	 * of a {@link org.springframework.beans.factory.parsing.ComponentDefinition}.
-	 * <br> serajoon
-	 * <br> 这Bean是Spring自己的，和你用户没有一毛钱关系
+	 * <p> serajoon
+	 * <p> 这Bean是Spring自己的,和用户没有一毛钱关系,infrastructure:基础设施
 	 */
 	int ROLE_INFRASTRUCTURE = 2;
 

@@ -207,8 +207,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	 * <p>Also supports Java EE 6's {@link javax.annotation.ManagedBean} and
 	 * JSR-330's {@link javax.inject.Named} annotations, if available.
 	 *
-	 * <br> serajoon
-	 * <br> 注册默认的过滤规则,默认注解为Component,Controller,Service,Repository,ManagedBean,Named
+	 * <p> serajoon
+	 * <p> 注册默认的过滤规则,默认注解为Component,Controller,Service,Repository,ManagedBean,Named
 	 */
 	@SuppressWarnings("unchecked")
 	protected void registerDefaultFilters() {
