@@ -23,28 +23,28 @@ import org.springframework.util.ObjectUtils;
 /**
  * Holder for a key-value style attribute that is part of a bean definition.
  * Keeps track of the definition source in addition to the key-value pair.
- * <br> serajoon
- * <br> Bean元数据定义中以键-值风格的属性信息
+ * <p> serajoon
+ * <p> Bean元数据定义中以键-值风格的属性信息
  * @author Juergen Hoeller
  * @since 2.5
  */
 public class BeanMetadataAttribute implements BeanMetadataElement {
 	/**
 	 * serajoon.
-	 * <br> 属性名
+	 * <p> 属性名
 	 */
 	private final String name;
 
 	/**
 	 * serajoon.
-	 * <br> 属性值
+	 * <p> 属性值
 	 */
 	@Nullable
 	private final Object value;
 
 	/**
 	 * serajoon.
-	 * <br> 属性所属对象
+	 * <p> 属性所属对象
 	 */
 	@Nullable
 	private Object source;

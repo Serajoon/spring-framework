@@ -527,6 +527,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Prepare the bean factory for use in this context.
 			// serajoon 3
+			// 对beanFactory填充属性
 			// 添加BeanPostProcessor,手动注册几个默认的bean(environment,systemProperties,systemEnvironment)
 			//
 			prepareBeanFactory(beanFactory);
@@ -534,13 +535,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
 				// serajoon 4
-				// 子类扩展点  该方法默认为一个空实现,是留给开发人员的一个扩展点,等着子类实现
+				// 子类扩展点,该方法默认为一个空实现,是留给开发人员的一个扩展点,等着子类实现,准备工作完成后进行的后置处理工作
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
 				// serajoon 5
+				// 1.完成Bean的扫描 2.BeanFactoryPostProcessor处理
+				// 在该步骤中首先会根据各种条件去加载BeanDefinition(ConfigurationClassPostProcessor)
 				// 执行所有Bean工厂BeanFactoryPostProcessor的后置处理器,
-				// 在该步骤中首先会根据各种条件去加载Bean Definition
 				// 然后执行beanFactory的后置处理器,Spring IoC容器允许BeanFactoryPostProcessor
 				// 在容器实例化任何bean之前读取bean的定义,并可以修改它
 				invokeBeanFactoryPostProcessors(beanFactory);
@@ -733,17 +735,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Instantiate and invoke all registered BeanFactoryPostProcessor beans,
 	 * respecting explicit order if given.
 	 * <p>Must be called before singleton instantiation.
-	 * <br> serajoon
-	 * <br> @Conditional判断
-	 * <br> 整个invokeBeanFactoryPostProcessors方法围绕两个接口,
-	 * <br> BeanDefinitionRegistryPostProcessor和BeanFactoryPostProcessor,
-	 * <br> 其中BeanDefinitionRegistryPostProcessor继承了BeanFactoryPostProcessor.
-	 * <br> BeanDefinitionRegistryPostProcessor主要用来在常规BeanFactoryPostProcessor检测开始之前注册其他Bean定义,
-	 * <br> 说的简单点,就是BeanDefinitionRegistryPostProcessor具有更高的优先级,执行顺序在BeanFactoryPostProcessor之前
+	 * <p> serajoon
+	 * <p> @Conditional判断
+	 * <p> 整个invokeBeanFactoryPostProcessors方法围绕两个接口,
+	 * <p> BeanDefinitionRegistryPostProcessor和BeanFactoryPostProcessor,
+	 * <p> 其中BeanDefinitionRegistryPostProcessor继承了BeanFactoryPostProcessor.
+	 * <p> BeanDefinitionRegistryPostProcessor主要用来在常规BeanFactoryPostProcessor检测开始之前注册其他Bean定义,
+	 * <p> 说的简单点,就是BeanDefinitionRegistryPostProcessor具有更高的优先级,执行顺序在BeanFactoryPostProcessor之前
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 		// serajoon
 		// 1.getBeanFactoryPostProcessors():拿到当前应用上下文已经注册的beanFactoryPostProcessors,默认情况下,返回空
+		// 手动调用addBeanFactoryPostProcessor才有值,实现BeanFactoryPostProcessor,增加@Component,也没用,还没扫描
 		// 2.invokeBeanFactoryPostProcessors:实例化并调用所有已注册的BeanFactoryPostProcessor
 		// 3.delegate:代表
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());

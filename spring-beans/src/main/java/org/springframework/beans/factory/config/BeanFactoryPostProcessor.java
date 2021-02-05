@@ -37,9 +37,9 @@ import org.springframework.beans.BeansException;
  * If bean instance interaction is required, consider implementing
  * {@link BeanPostProcessor} instead.
  *
- * <br> serajoon
- * <br> 1.BeanFactoryPostProcessor允许使用者修改容器中的bean definition
- * <br> 2.不要进行bean实例化
+ * <p> serajoon
+ * <p> 1.BeanFactoryPostProcessor允许使用者修改容器中的bean definition
+ * <p> 2.不要进行bean实例化
  * @author Juergen Hoeller
  * @since 06.07.2003
  * @see BeanPostProcessor
