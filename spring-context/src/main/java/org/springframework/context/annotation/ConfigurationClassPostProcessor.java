@@ -263,7 +263,12 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
 		// serajoon 获取IOC容器中目前所有Bean定义的名称
 		String[] candidateNames = registry.getBeanDefinitionNames();
-
+		// ConfigurationClassPostProcessor
+		// AutowiredAnnotationBeanPostProcessor
+		// CommonAnnotationBeanPostProcessor
+		// EventListenerMethodProcessor
+		// DefaultEventListenerFactory
+		// 自定义config 只有自定义的会被添加到configCandidates
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 			// serajoon 判断有没有被解析过

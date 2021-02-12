@@ -40,8 +40,8 @@ import org.springframework.util.MultiValueMap;
 
 /**
  * Internal class used to evaluate {@link Conditional} annotations.
- * <br> serajoon
- * <br> 对注解Conditional的解析器,评估有Conditional注解的类是否需要跳过
+ * <p> serajoon
+ * <p> 对注解Conditional的解析器,评估有Conditional注解的类是否需要跳过
  *
  * @author Phillip Webb
  * @author Juergen Hoeller

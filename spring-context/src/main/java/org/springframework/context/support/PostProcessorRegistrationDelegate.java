@@ -102,7 +102,7 @@ final class PostProcessorRegistrationDelegate {
 			// serajoon 找出所有实现BeanDefinitionRegistryPostProcessor接口的Bean的beanName
 			// 初始化时spring定义的和配置类中实现该接口的,其他的需要通过配置类扫描以后才处理
 			// org.springframework.context.annotation.internalConfigurationAnnotationProcessor->ConfigurationClassPostProcessor
-			// 通常就一个ConfigurationClassPostProcessor,因为我们自定的BeanDefinitionRegistryPostProcessor还没有被加入到Spring容器中
+			// 通常就一个ConfigurationClassPostProcessor,因为我们自定义的BeanDefinitionRegistryPostProcessor还没有被加入到Spring容器中
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
@@ -124,7 +124,7 @@ final class PostProcessorRegistrationDelegate {
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
 			// serajoon 调用所有实现了Ordered接口的BeanDefinitionRegistryPostProcessor实现类(过程跟上面的步骤基本一样)
 			// 这边重复查找是因为执行完上面的BeanDefinitionRegistryPostProcessor,
-			// 可能会新增了其他的BeanDefinitionRegistryPostProcessor,,因此需要重新查找
+			// 可能会新增了其他的BeanDefinitionRegistryPostProcessor,因此需要重新查找
 			postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
 				if (!processedBeans.contains(ppName) && beanFactory.isTypeMatch(ppName, Ordered.class)) {
