@@ -197,6 +197,8 @@ public @interface PropertySource {
 	 * ignored.
 	 * <p>{@code true} is appropriate if the properties file is completely optional.
 	 * Default is {@code false}.
+	 * <p> serajoon
+	 * <p> 当指定的配置文件不存在时,是忽略否报错,默认是false,抛出异常;true:只打印log
 	 * @since 4.0
 	 */
 	boolean ignoreResourceNotFound() default false;

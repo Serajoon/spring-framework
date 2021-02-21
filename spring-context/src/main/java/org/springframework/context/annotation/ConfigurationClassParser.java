@@ -164,6 +164,8 @@ class ConfigurationClassParser {
 	public void parse(Set<BeanDefinitionHolder> configCandidates) {
 		for (BeanDefinitionHolder holder : configCandidates) {
 			BeanDefinition bd = holder.getBeanDefinition();
+			// serajoon 根据BeanDefinition的不同,调用parse()不同的重载方法
+			// 实际最后都是调用processConfigurationClass(new ConfigurationClass)
 			try {
 				if (bd instanceof AnnotatedBeanDefinition) {
 					parse(((AnnotatedBeanDefinition) bd).getMetadata(), holder.getBeanName());
@@ -198,6 +200,7 @@ class ConfigurationClassParser {
 	}
 
 	protected final void parse(AnnotationMetadata metadata, String beanName) throws IOException {
+		//serajoon 将配置类封装成ConfigurationClass对象解析
 		processConfigurationClass(new ConfigurationClass(metadata, beanName));
 	}
 
@@ -244,10 +247,12 @@ class ConfigurationClassParser {
 		}
 
 		// Recursively process the configuration class and its superclass hierarchy.
-		// serajoon 递归处理configuration类及其超类
+		// serajoon 递归处理configuration类及其父类
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
 			// serajoon 从配置类解析一切可能的bean形式,内部类,成员方法,@Import等,返回值为父类,继续解析父类直到为null
+			// SourceClass的意义:简单的包装类,目的是为了以统一的方式去处理带有注解的类,不管这些类是如何加载的
+			// 如果无法理解,可以把它当做一个黑盒,不会影响看spring源码的主流程
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
@@ -266,15 +271,16 @@ class ConfigurationClassParser {
 	@Nullable
 	protected final SourceClass doProcessConfigurationClass(ConfigurationClass configClass, SourceClass sourceClass)
 			throws IOException {
-
+		// serajoon
+		// 1.如果类上有@Component,遍历其内部类,然后调用doProcessConfigurationClass递归处理内部类
 		if (configClass.getMetadata().isAnnotated(Component.class.getName())) {
 			// Recursively process any member (nested) classes first
-			// serajoon 递归处理内部类
 			processMemberClasses(configClass, sourceClass);
 		}
 
 		// Process any @PropertySource annotations
-		// serajoon 处理PropertySources注解
+		// serajoon
+		// 2.处理PropertySources/PropertySource注解,将该注解对应的属性文件加载到Environment中
 		for (AnnotationAttributes propertySource : AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), PropertySources.class,
 				org.springframework.context.annotation.PropertySource.class)) {
@@ -287,14 +293,16 @@ class ConfigurationClassParser {
 			}
 		}
 
-		// Process any @ComponentScan annotations1
+		// Process any @ComponentScan annotations
+		// serajoon
+		// 3. 处理@ComponentScan,将其指定的包下的bean注册到框架中
 		Set<AnnotationAttributes> componentScans = AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), ComponentScans.class, ComponentScan.class);
 		if (!componentScans.isEmpty() &&
 				!this.conditionEvaluator.shouldSkip(sourceClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN)) {
 			for (AnnotationAttributes componentScan : componentScans) {
 				// The config class is annotated with @ComponentScan -> perform the scan immediately
-				// serajoon 扫描@ComponentScan注解中指定的包路径所有的bean
+				// serajoon 扫描@ComponentScan注解中指定的包路径所有的bean,并注册BeanDefinition
 				Set<BeanDefinitionHolder> scannedBeanDefinitions =
 						this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
 				// Check the set of scanned definitions for any further config classes and parse recursively if needed
@@ -312,10 +320,13 @@ class ConfigurationClassParser {
 		}
 
 		// Process any @Import annotations
-		// serajoon 处理@Import注解,debug断点条件:sourceClass.toString().equals("包.类")
+		// serajoon
+		// 4. 处理@Import注解,debug断点条件:sourceClass.toString().equals("包.类")
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
 		// Process any @ImportResource annotations
+		// serajoon
+		// 5. 处理@ImportResource
 		AnnotationAttributes importResource =
 				AnnotationConfigUtils.attributesFor(sourceClass.getMetadata(), ImportResource.class);
 		if (importResource != null) {
@@ -328,15 +339,32 @@ class ConfigurationClassParser {
 		}
 
 		// Process individual @Bean methods
+		// serajoon
+		// 6.检索类中使用@Bean注解的方法(不包含父类),添加到configClass的beanMethod中
 		Set<MethodMetadata> beanMethods = retrieveBeanMethodMetadata(sourceClass);
 		for (MethodMetadata methodMetadata : beanMethods) {
 			configClass.addBeanMethod(new BeanMethod(methodMetadata, configClass));
 		}
 
 		// Process default methods on interfaces
+		// serajoon
+		// 7.处理接口的default方法,遍历这个类的接口,判断有没有使用@Bean注解的非抽象方法(java8),添加到configClass的beanMethod中
+		// 很少用这种
+		// public interface DefaultInterface {
+		//	 @Bean
+		//	 default Object hello() {
+		//		 return new Object();
+		//	 }
+		// }
+		// @Configuration
+		// public class AppConfig implements DefaultInterface{
+		// }
+
 		processInterfaces(configClass, sourceClass);
 
 		// Process superclass, if any
+		// serajoon
+		// 8.递归处理父类,如果父类需要处理返回父类,否则返回null,包名以java开头的父类出完,即jdk的
 		if (sourceClass.getMetadata().hasSuperClass()) {
 			String superclass = sourceClass.getMetadata().getSuperClassName();
 			if (superclass != null && !superclass.startsWith("java") &&
@@ -356,15 +384,20 @@ class ConfigurationClassParser {
 	 */
 	private void processMemberClasses(ConfigurationClass configClass, SourceClass sourceClass) throws IOException {
 		Collection<SourceClass> memberClasses = sourceClass.getMemberClasses();
+		// serajoon 判断有没有内部类,没有直接跳过
 		if (!memberClasses.isEmpty()) {
 			List<SourceClass> candidates = new ArrayList<>(memberClasses.size());
 			for (SourceClass memberClass : memberClasses) {
+				// serajoon
+				// 判断是否是配置类,判断也很简单,之前分析过,
+				// 判断类上面有没有@Configuration,@Import,@ImportResource,@Component,@ComponentScan以及@Bean标注的方法
 				if (ConfigurationClassUtils.isConfigurationCandidate(memberClass.getMetadata()) &&
 						!memberClass.getMetadata().getClassName().equals(configClass.getMetadata().getClassName())) {
 					candidates.add(memberClass);
 				}
 			}
 			OrderComparator.sort(candidates);
+			// serajoon 防止A引入B,B引入A
 			for (SourceClass candidate : candidates) {
 				if (this.importStack.contains(configClass)) {
 					this.problemReporter.error(new CircularImportProblem(configClass, this.importStack));
@@ -439,6 +472,8 @@ class ConfigurationClassParser {
 
 	/**
 	 * Process the given <code>@PropertySource</code> annotation metadata.
+	 * <p> serajoon
+	 * <p> 处理@PropertySource
 	 * @param propertySource metadata for the <code>@PropertySource</code> annotation found
 	 * @throws IOException if loading a property source failed
 	 */
@@ -571,6 +606,12 @@ class ConfigurationClassParser {
 		else {
 			this.importStack.push(configClass);
 			try {
+				// serajoon
+				// 循环处理每一个@Import,每个@Import可能导入三种类型的类
+				// 1. ImportSelector
+				// 2. ImportBeanDefinitionRegistrar
+				// 3. 其他类型,都当作配置类处理,也就是相当于使用了注解@Configuration的配置类
+				// 下面的for循环中对这三种情况执行了不同的处理逻辑
 				for (SourceClass candidate : importCandidates) {
 					if (candidate.isAssignable(ImportSelector.class)) {
 						// Candidate class is an ImportSelector -> delegate to it to determine imports

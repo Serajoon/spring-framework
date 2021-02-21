@@ -540,6 +540,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Invoke factory processors registered as beans in the context.
 				// serajoon 5
+				// BeanFactory初始化之后,beanDefinition都已经加载,但是bean还未创建前进行调用,可以修改或增加BeanDefinition
 				// 1.完成Bean的扫描 2.BeanFactoryPostProcessor处理
 				// 在该步骤中首先会根据各种条件去加载BeanDefinition(ConfigurationClassPostProcessor)
 				// 执行所有Bean工厂BeanFactoryPostProcessor的后置处理器,

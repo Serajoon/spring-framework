@@ -278,11 +278,13 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
 			}
-			// serajoon 会判断是否是一个配置类,并为BeanDefinition设置属性为lite或者full
+			// serajoon
+			// 会判断是否是一个配置类,并为BeanDefinition设置属性为lite或者full
 			// 在这儿为BeanDefinition设置lite和full属性值是为了后面在使用
 			// 如果加了@Configuration,那么对应的BeanDefinition为full;
 			// 如果加了@Bean,@Component,@ComponentScan,@Import,@ImportResource这些注解,则为lite(前提:类上没有被标注@Configuration)
-			// lite和full均表示这个BeanDefinition对应的类是一个配置类
+			// lite和full均表示这个BeanDefinition对应的类是一个配置类,
+			// 后面会根据该属性判断配置类是否需要CGLIB增强
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
 			}
@@ -320,7 +322,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 
 		// Parse each @Configuration class
-		// serajoon 解析@Congiguration配置类
+		// serajoon 创建配置类解析器,解析配置类
 		ConfigurationClassParser parser = new ConfigurationClassParser(
 				this.metadataReaderFactory, this.problemReporter, this.environment,
 				this.resourceLoader, this.componentScanBeanNameGenerator, registry);
@@ -328,10 +330,16 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
+			// 将通过@ComponentScan注解扫描的类才会加入到BeanDefinitionMap中(有@Component)
+			// 通过其他注解(例如@Import,@Bean)的方式,在parse()方法这一步并不会将其解析为BeanDefinition放入到BeanDefinitionMap中,
+			// 而是先解析成ConfigurationClass类
+			// 真正放入到BeanDefinitionMap中是在下面的this.reader.loadBeanDefinitions()方法中实现的
 			parser.parse(candidates);
+			// 验证如果要CGLIB代理的话条件是否满足,比如类不能final,bean注解方法可覆盖
 			parser.validate();
 
 			Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());
+			// 删除已经解析的
 			configClasses.removeAll(alreadyParsed);
 
 			// Read the model and create bean definitions based on its content
@@ -340,11 +348,12 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
-			// serajoon
+			// serajoon 将parse出来的ConfigurationClass加载成BeanDefinition
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 
 			candidates.clear();
+			// serajoon 如果有加载到新的bean定义，再继续加载
 			if (registry.getBeanDefinitionCount() > candidateNames.length) {
 				String[] newCandidateNames = registry.getBeanDefinitionNames();
 				Set<String> oldCandidateNames = new HashSet<>(Arrays.asList(candidateNames));
@@ -354,6 +363,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				}
 				for (String candidateName : newCandidateNames) {
 					if (!oldCandidateNames.contains(candidateName)) {
+						//获得新加载的BeanDefinition
 						BeanDefinition bd = registry.getBeanDefinition(candidateName);
 						if (ConfigurationClassUtils.checkConfigurationClassCandidate(bd, this.metadataReaderFactory) &&
 								!alreadyParsedClasses.contains(bd.getBeanClassName())) {

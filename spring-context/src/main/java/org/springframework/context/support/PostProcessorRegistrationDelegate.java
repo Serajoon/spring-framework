@@ -53,8 +53,8 @@ final class PostProcessorRegistrationDelegate {
 
 	/**
 	 * serajoon.
-	 * <br> 如果不采用手动增加的方式,而是由Spring自己管理,则beanFactoryPostProcessors.size总是0
-	 * <br> 如何进行手动增加BeanFactoryPostProcessor
+	 * <p> 如果不采用手动增加的方式,而是由Spring自己管理,则beanFactoryPostProcessors.size总是0
+	 * <p> 如何进行手动增加BeanFactoryPostProcessor
 	 * <pre>
 	 * AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 	 * context.register(ConditionMain.class);
@@ -69,7 +69,7 @@ final class PostProcessorRegistrationDelegate {
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
-		// serajoon 代表了一个已经处理过的Bean的容器,防止重复执行
+		// serajoon 代表了一个已经处理过的BeanDefinitionRegistryPostProcessor Bean处理器,防止重复执行
 		Set<String> processedBeans = new HashSet<>();
 
 		if (beanFactory instanceof BeanDefinitionRegistry) {
@@ -96,13 +96,14 @@ final class PostProcessorRegistrationDelegate {
 			// Separate between BeanDefinitionRegistryPostProcessors that implement
 			// PriorityOrdered, Ordered, and the rest.
 			// serajoon 用于保存本次要执行的BeanDefinitionRegistryPostProcessor,临时的,用完clear
+			// 允许在常规BeanFactoryPostProcessor检测开始之前注册更多的bean定义
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
 			// serajoon 找出所有实现BeanDefinitionRegistryPostProcessor接口的Bean的beanName
 			// 初始化时spring定义的和配置类中实现该接口的,其他的需要通过配置类扫描以后才处理
 			// org.springframework.context.annotation.internalConfigurationAnnotationProcessor->ConfigurationClassPostProcessor
-			// 通常就一个ConfigurationClassPostProcessor,因为我们自定义的BeanDefinitionRegistryPostProcessor还没有被加入到Spring容器中
+			// 通常就一个ConfigurationClassPostProcessor,因为我们自定义的BeanDefinitionRegistryPostProcessor还没有被加入到Spring容器中(beanDefinitionNames)
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
@@ -112,6 +113,7 @@ final class PostProcessorRegistrationDelegate {
 					// 例如org.springframework.context.annotation.internalConfigurationAnnotationProcessor
 					// beanFactory.getBean会触发创建ppName对应的bean对象
 					currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
+					//ppName放入processedBeans,表示处理过
 					processedBeans.add(ppName);
 				}
 			}

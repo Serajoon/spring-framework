@@ -138,6 +138,10 @@ abstract class ConfigurationClassUtils {
 	 * @param metadata the metadata of the annotated class
 	 * @return {@code true} if the given class is to be registered as a
 	 * reflection-detected bean definition; {@code false} otherwise
+	 * <p> serajoon
+	 * <p> 判断是否是配置类
+	 * <p> 加了@Configuration肯定是配置类而且是full,其实不加也可以是配置类,只要不是接口类型(lite会校验,full不会)
+	 * 有Component,ComponentScan,Import,ImportResource任意一个注解或者有bean注解的方法
 	 */
 	public static boolean isConfigurationCandidate(AnnotationMetadata metadata) {
 		return (isFullConfigurationCandidate(metadata) || isLiteConfigurationCandidate(metadata));
@@ -146,8 +150,8 @@ abstract class ConfigurationClassUtils {
 	/**
 	 * Check the given metadata for a full configuration class candidate
 	 * (i.e. a class annotated with {@code @Configuration}).
-	 * <br> serajoon
-	 * <br> 判断是否有@Configuration,自定义的注解中有@Configuration也为true
+	 * <p> serajoon
+	 * <p> 判断是否有@Configuration,自定义的注解中有@Configuration也为true
 	 * @param metadata the metadata of the annotated class
 	 * @return {@code true} if the given class is to be processed as a full
 	 * configuration class, including cross-method call interception
