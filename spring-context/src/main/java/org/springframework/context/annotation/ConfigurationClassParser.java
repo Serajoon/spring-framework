@@ -264,6 +264,10 @@ class ConfigurationClassParser {
 	 * Apply processing and build a complete {@link ConfigurationClass} by reading the
 	 * annotations, members and methods from the source class. This method can be called
 	 * multiple times as relevant sources are discovered.
+	 * <p> serajoon
+	 * <p> 解析配置类,在这会处理1-8步
+	 * <p> 只会将@ComponentScan注解扫描的类加入到BeanDefinitionMap中,通过其他方式例如(@Import,@Bean等)并不会加入到BeanDefinitionMap,
+	 * <p> 而是先解析成ConfigurationClass的属性,真正放入到map中是在下面的loadBeanDefinitions()方法中实现的
 	 * @param configClass the configuration class being build
 	 * @param sourceClass a source class
 	 * @return the superclass, or {@code null} if none found or previously processed
@@ -303,6 +307,7 @@ class ConfigurationClassParser {
 			for (AnnotationAttributes componentScan : componentScans) {
 				// The config class is annotated with @ComponentScan -> perform the scan immediately
 				// serajoon 扫描@ComponentScan注解中指定的包路径所有的bean,并注册BeanDefinition
+				// 已经注册过的会跳过
 				Set<BeanDefinitionHolder> scannedBeanDefinitions =
 						this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
 				// Check the set of scanned definitions for any further config classes and parse recursively if needed
@@ -364,7 +369,8 @@ class ConfigurationClassParser {
 
 		// Process superclass, if any
 		// serajoon
-		// 8.递归处理父类,如果父类需要处理返回父类,否则返回null,包名以java开头的父类出完,即jdk的
+		// 8.递归处理父类,如果父类需要处理返回父类,表示当前配置类还没有解析完
+		// 否则返回null,包名以java开头的父类出完,即jdk的
 		if (sourceClass.getMetadata().hasSuperClass()) {
 			String superclass = sourceClass.getMetadata().getSuperClassName();
 			if (superclass != null && !superclass.startsWith("java") &&
@@ -389,7 +395,7 @@ class ConfigurationClassParser {
 			List<SourceClass> candidates = new ArrayList<>(memberClasses.size());
 			for (SourceClass memberClass : memberClasses) {
 				// serajoon
-				// 判断是否是配置类,判断也很简单,之前分析过,
+				// 判断内部类是否是配置类,判断也很简单,之前分析过,
 				// 判断类上面有没有@Configuration,@Import,@ImportResource,@Component,@ComponentScan以及@Bean标注的方法
 				if (ConfigurationClassUtils.isConfigurationCandidate(memberClass.getMetadata()) &&
 						!memberClass.getMetadata().getClassName().equals(configClass.getMetadata().getClassName())) {
@@ -496,8 +502,11 @@ class ConfigurationClassParser {
 
 		for (String location : locations) {
 			try {
+				// serajoon 解析占位符
 				String resolvedLocation = this.environment.resolveRequiredPlaceholders(location);
+				// 得到资源文件
 				Resource resource = this.resourceLoader.getResource(resolvedLocation);
+				// 把资源文件解析成PropertySource对象，并且添加到environment中去
 				addPropertySource(factory.createPropertySource(name, new EncodedResource(resource, encoding)));
 			}
 			catch (IllegalArgumentException | FileNotFoundException | UnknownHostException ex) {

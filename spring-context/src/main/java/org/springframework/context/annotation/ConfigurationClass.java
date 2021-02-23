@@ -48,24 +48,41 @@ import org.springframework.util.ClassUtils;
  * @see ConfigurationClassParser
  */
 final class ConfigurationClass {
-
+	/**
+	 * serajoon.
+	 * <p> 配置类元数据信息
+	 */
 	private final AnnotationMetadata metadata;
 
+	/**
+	 * serajoon.
+	 * <p> 配置类资源对象
+	 */
 	private final Resource resource;
 
 	@Nullable
 	private String beanName;
 
+	/**
+	 * serajoon.
+	 */
 	private final Set<ConfigurationClass> importedBy = new LinkedHashSet<>(1);
 
 	private final Set<BeanMethod> beanMethods = new LinkedHashSet<>();
 
+	/**
+	 * serajoon.
+	 * 存放通过@ImportResource注解引入资源类及BeanDefinitionReader读取器对应关系.
+	 */
 	private final Map<String, Class<? extends BeanDefinitionReader>> importedResources =
 			new LinkedHashMap<>();
 
 	private final Map<ImportBeanDefinitionRegistrar, AnnotationMetadata> importBeanDefinitionRegistrars =
 			new LinkedHashMap<>();
 
+	/**
+	 * 存放将BeanMethod标记为按其条件跳过.
+	 */
 	final Set<String> skippedBeanMethods = new HashSet<>();
 
 
@@ -161,6 +178,8 @@ final class ConfigurationClass {
 	/**
 	 * Return whether this configuration class was registered via @{@link Import} or
 	 * automatically registered due to being nested within another configuration class.
+	 * serajoon
+	 *
 	 * @since 3.1.1
 	 * @see #getImportedBy()
 	 */
@@ -213,11 +232,12 @@ final class ConfigurationClass {
 	public void validate(ProblemReporter problemReporter) {
 		// A configuration class may not be final (CGLIB limitation)
 		if (getMetadata().isAnnotated(Configuration.class.getName())) {
+			// serajoon 如果一个配置类有@Configuration并确实final,则抛出BeanDefinitionParsingException异常信息
 			if (getMetadata().isFinal()) {
 				problemReporter.error(new FinalConfigurationProblem());
 			}
 		}
-
+		// serajoon 校验@Bean方法
 		for (BeanMethod beanMethod : this.beanMethods) {
 			beanMethod.validate(problemReporter);
 		}

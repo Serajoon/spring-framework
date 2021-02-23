@@ -261,14 +261,15 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
 		// serajoon 候选的配置类集合
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
-		// serajoon 获取IOC容器中目前所有Bean定义的名称
+		// serajoon 获取IOC容器中目前所有BeanDefinition的名称
 		String[] candidateNames = registry.getBeanDefinitionNames();
 		// ConfigurationClassPostProcessor
 		// AutowiredAnnotationBeanPostProcessor
 		// CommonAnnotationBeanPostProcessor
 		// EventListenerMethodProcessor
 		// DefaultEventListenerFactory
-		// 自定义config 只有自定义的会被添加到configCandidates
+		// 自定义config
+		// 只有自定义的会被添加到configCandidates,遍历candidateNames,判断是否是一个配置Bean
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 			// serajoon 判断有没有被解析过
@@ -329,13 +330,17 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
+		// 解析配置类时,可能配置类又导入了另一些配置类,需要迭代解析
 		do {
-			// 将通过@ComponentScan注解扫描的类才会加入到BeanDefinitionMap中(有@Component)
+			// 通过@ComponentScan注解扫描的类才会加入到BeanDefinitionMap中(有@Component)
 			// 通过其他注解(例如@Import,@Bean)的方式,在parse()方法这一步并不会将其解析为BeanDefinition放入到BeanDefinitionMap中,
 			// 而是先解析成ConfigurationClass类
 			// 真正放入到BeanDefinitionMap中是在下面的this.reader.loadBeanDefinitions()方法中实现的
 			parser.parse(candidates);
-			// 验证如果要CGLIB代理的话条件是否满足,比如类不能final,bean注解方法可覆盖
+			// 验证如果要CGLIB代理的话条件是否满足
+			// 如果是@Configuration标注的类,那么不能是final
+			// @Bean标注的方法不能是private final的,注意方法可以是static的,虽然static方法不能被重写,但是他可以被继承
+			// 尽量不要是static方法,因为CGLIB代理不能重写static方法
 			parser.validate();
 
 			Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());
