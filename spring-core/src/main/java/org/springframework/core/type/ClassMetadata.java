@@ -77,6 +77,7 @@ public interface ClassMetadata {
 	 * local class within a method).
 	 * <p>If this method returns {@code false}, then the underlying
 	 * class is a top-level class.
+	 * serajoon 确定底层类是否是独立的,即它是否是顶级类或嵌套类(静态内部类)它可以独立于封闭类构造
 	 */
 	boolean hasEnclosingClass();
 

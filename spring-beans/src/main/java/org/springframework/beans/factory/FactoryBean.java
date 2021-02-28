@@ -47,8 +47,8 @@ import org.springframework.lang.Nullable;
  * synchronization of bean creation. There is usually no need for internal
  * synchronization other than for purposes of lazy initialization within the
  * FactoryBean itself (or the like).
- * <br> serajoon
- * <br> 实现此接口的bean不能用作普通bean.此bean暴露的对象是通过getObject()创建的对象,而不是它自身
+ * <p> serajoon
+ * <p> 实现此接口的bean不能用作普通bean.此bean暴露的对象是通过getObject()创建的对象,而不是它自身
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
