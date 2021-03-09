@@ -79,6 +79,7 @@ final class PostProcessorRegistrationDelegate {
 			// serajoon 用于存放BeanDefinitionRegistryPostProcessor
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 			// serajoon 处理手动注册的BeanFactoryPostProcessor
+			// 不是在手动refresh前addBeanFactoryPostProcessor,beanFactoryPostProcessors.size=0
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
@@ -104,6 +105,7 @@ final class PostProcessorRegistrationDelegate {
 			// 初始化时spring定义的和配置类中实现该接口的,其他的需要通过配置类扫描以后才处理
 			// org.springframework.context.annotation.internalConfigurationAnnotationProcessor->ConfigurationClassPostProcessor
 			// 通常就一个ConfigurationClassPostProcessor,因为我们自定义的BeanDefinitionRegistryPostProcessor还没有被加入到Spring容器中(beanDefinitionNames)
+			// 从beanDefinitionNames中找
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {

@@ -166,6 +166,7 @@ class ConfigurationClassParser {
 			BeanDefinition bd = holder.getBeanDefinition();
 			// serajoon 根据BeanDefinition的不同,调用parse()不同的重载方法
 			// 实际最后都是调用processConfigurationClass(new ConfigurationClass)
+			// BeanDefinition两个子类AnnotatedBeanDefinition和AbstractBeanDefinition
 			try {
 				if (bd instanceof AnnotatedBeanDefinition) {
 					parse(((AnnotatedBeanDefinition) bd).getMetadata(), holder.getBeanName());
