@@ -895,10 +895,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/**
 	 * Finish the initialization of this context's bean factory,
 	 * initializing all remaining singleton beans.
-	 * <br> serajoon
-	 * <br> Bean的生命周期在这完成
-	 * <br>		1. 创建所有非懒加载的单例类
-	 * <br>		2. invoke BeanPostProcessors
+	 * <p> serajoon
+	 * <p> Bean的生命周期在这完成
+	 * <p>   1.创建所有非懒加载的单例类
+	 * <p>	 2. invoke BeanPostProcessors
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// Initialize conversion service for this context.
@@ -925,9 +925,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.setTempClassLoader(null);
 
 		// Allow for caching all bean definition metadata, not expecting further changes.
+		// serajoon
+		// 1.设置冻结标记configurationFrozen=true,BeanDefinition不再被修改或进一步后处理
+		// 2.缓存所有beanDefinitionNames到一个数组中
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.
+		// serajoon 实例化所有的non-lazy-init单例
 		beanFactory.preInstantiateSingletons();
 	}
 

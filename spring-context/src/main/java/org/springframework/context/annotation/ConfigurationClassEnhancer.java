@@ -73,6 +73,10 @@ import org.springframework.util.ReflectionUtils;
 class ConfigurationClassEnhancer {
 
 	// The callbacks to use. Note that these callbacks must be stateless.
+	// serajoon
+	// BeanMethodInterceptor:拦截@Bean方法的调用,以确保正确处理@Bean语义
+	// BeanFactoryAwareMethodInterceptor:负责拦截BeanFactoryAware#setBeanFactory方法的调用,因为
+	// 增强的配置类实现了EnhancedConfiguration接口(也就是实现了BeanFactoryAware接口)
 	private static final Callback[] CALLBACKS = new Callback[] {
 			new BeanMethodInterceptor(),
 			new BeanFactoryAwareMethodInterceptor(),
@@ -116,14 +120,24 @@ class ConfigurationClassEnhancer {
 
 	/**
 	 * Creates a new CGLIB {@link Enhancer} instance.
+	 * <p> serajoon.
+	 * <p> spring重新打包了CGLIB(使用Spring专用补丁;仅供内部使用)
+	 * 这样可避免在应用程序级别或第三方库和框架上与CGLIB的依赖性发生任何潜在冲突
+	 * https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cglib/package-summary.html
+	 *
 	 */
 	private Enhancer newEnhancer(Class<?> configSuperClass, @Nullable ClassLoader classLoader) {
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(configSuperClass);
+		// 设置需要实现的接口,也就是说,我们的配置类的cglib代理还实现了EnhancedConfiguration接口
 		enhancer.setInterfaces(new Class<?>[] {EnhancedConfiguration.class});
 		enhancer.setUseFactory(false);
+		// 设置命名策略
 		enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
+		// 设置生成器创建字节码策略
+		// BeanFactoryAwareGeneratorStrategy是CGLIB的DefaultGeneratorStrategy的自定义扩展,主要为了引入BeanFactory字段
 		enhancer.setStrategy(new BeanFactoryAwareGeneratorStrategy(classLoader));
+		// 设置增强
 		enhancer.setCallbackFilter(CALLBACK_FILTER);
 		enhancer.setCallbackTypes(CALLBACK_FILTER.getCallbackTypes());
 		return enhancer;
