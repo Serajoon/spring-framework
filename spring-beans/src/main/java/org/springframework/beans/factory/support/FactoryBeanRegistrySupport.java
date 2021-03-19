@@ -37,6 +37,8 @@ import org.springframework.lang.Nullable;
  * integrated with {@link DefaultSingletonBeanRegistry}'s singleton management.
  *
  * <p>Serves as base class for {@link AbstractBeanFactory}.
+ * <p> serajoon
+ * <p> 主要是在DefaultSingletonBeanRegistry基础上增加了对FactoryBean的特殊处理功能
  *
  * @author Juergen Hoeller
  * @since 2.5.1
@@ -45,7 +47,8 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 
 	/**
 	 * Cache of singleton objects created by FactoryBeans: FactoryBean name to object.
-	 * 存储了不以&开头的beanName和bean
+	 * <p> serajoon
+	 * <p> 存储了不以&开头的beanName和bean,缓存factoryBeans创建的singleton对象
 	 */
 	private final Map<String, Object> factoryBeanObjectCache = new ConcurrentHashMap<>(16);
 
@@ -59,6 +62,8 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	@Nullable
 	protected Class<?> getTypeForFactoryBean(final FactoryBean<?> factoryBean) {
 		try {
+			// serajoon
+			// 此处是JDK的权限控制,主要是操作系统层面的权限
 			if (System.getSecurityManager() != null) {
 				return AccessController.doPrivileged((PrivilegedAction<Class<?>>)
 						factoryBean::getObjectType, getAccessControlContext());
@@ -98,9 +103,13 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	 */
 	protected Object getObjectFromFactoryBean(FactoryBean<?> factory, String beanName, boolean shouldPostProcess) {
 		if (factory.isSingleton() && containsSingleton(beanName)) {
+			// serajoon
+			// 单例缓存加上同步快防止并发
 			synchronized (getSingletonMutex()) {
 				Object object = this.factoryBeanObjectCache.get(beanName);
 				if (object == null) {
+					// serajoon
+					// 如果缓存中没有,通过factoryBean获取对象
 					object = doGetObjectFromFactoryBean(factory, beanName);
 					// Only post-process and store if not put there already during getObject() call above
 					// (e.g. because of circular reference processing triggered by custom getBean calls)

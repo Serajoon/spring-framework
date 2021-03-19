@@ -72,26 +72,26 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * Cache of singleton objects: bean name to bean instance.
-	 * <br> serajoon
-	 * <br> 1级缓存,单例缓存池,不是IOC容器
-	 * <br> 缓存创建完成的单例Bean,该map中获取的bean是完整的可以直接使用的bean
+	 * <p> serajoon
+	 * <p> 1级缓存,单例缓存池,不是IOC容器
+	 * <p> 缓存创建完成的单例Bean,该map中获取的bean是完整的可以直接使用的bean
 	 */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
 	/**
 	 * Cache of singleton factories: bean name to ObjectFactory.
-	 * <br> serajoon
-	 * <br> 3级缓存
-	 * <br> 映射创建Bean的原始工厂
+	 * <p> serajoon
+	 * <p> 3级缓存
+	 * <p> 映射创建Bean的原始工厂
 	 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/**
 	 * Cache of early singleton objects: bean name to bean instance.
-	 * <br> serajoon 缓存实例(这是new出来的对象),也就是说在这个Map里的Bean不是完整的,甚至还不能称之为Bean,只是一个Instance
-	 * <br> 2级缓存
-	 * <br> 是由singletonFactory制造出来的
-	 * <br> 解决循环引用问题
+	 * <p> serajoon 缓存实例(这是new出来的对象),也就是说在这个Map里的Bean不是完整的,甚至还不能称之为Bean,只是一个Instance
+	 * <p> 2级缓存
+	 * <p> 是由singletonFactory制造出来的
+	 * <p> 解决循环引用问题
 	 */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
@@ -100,7 +100,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * Names of beans that are currently in creation.
-	 * <br> serajoon 正在创建的单例类集合
+	 * <p> serajoon 正在创建的单例类集合
 	 */
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<>(16));
@@ -188,12 +188,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * Return the (raw) singleton object registered under the given name.
 	 * <p>Checks already instantiated singletons and also allows for an early
 	 * reference to a currently created singleton (resolving a circular reference).
-	 * <br> serajoon
-	 * <br> 在getSingleton的时候,spring的默认实现是先从singletonObjects寻找,如果找不到,
-	 * <br> 再从earlySingletonObjects寻找,仍然找不到,那就从singletonFactories寻找对应的制造singleton的工厂singletonFactory,
-	 * <br> 而singletonFactory是addSingletonFactory(beanName,()->getEarlyBeanReference(beanName,mbd,bean));
-	 * <br> 中的()->getEarlyBeanReference(beanName, mbd, bean)
-	 * <br> 然后调用工厂的getObject方法,造出对应的SingletonBean,并放入earlySingletonObjects中
+	 * <p> serajoon
+	 * <p> 在getSingleton的时候,spring的默认实现是先从singletonObjects寻找,如果找不到,
+	 * <p> 再从earlySingletonObjects寻找,仍然找不到,那就从singletonFactories寻找对应的制造singleton的工厂singletonFactory,
+	 * <p> 而singletonFactory是addSingletonFactory(beanName,()->getEarlyBeanReference(beanName,mbd,bean));
+	 * <p> 中的()->getEarlyBeanReference(beanName, mbd, bean)
+	 * <p> 然后调用工厂的getObject方法,造出对应的SingletonBean,并放入earlySingletonObjects中
 	 * @param beanName the name of the bean to look for
 	 * @param allowEarlyReference whether early references should be created or not
 	 * @return the registered singleton object, or {@code null} if none found

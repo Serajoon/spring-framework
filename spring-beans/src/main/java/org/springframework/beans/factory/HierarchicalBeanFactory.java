@@ -16,6 +16,7 @@
 
 package org.springframework.beans.factory;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.lang.Nullable;
 
 /**
@@ -25,7 +26,8 @@ import org.springframework.lang.Nullable;
  * <p>The corresponding {@code setParentBeanFactory} method for bean
  * factories that allow setting the parent in a configurable
  * fashion can be found in the ConfigurableBeanFactory interface.
- *
+ * <p> serajoon
+ * <p> 提供父容器的访问功能,设置父容器在{@link ConfigurableBeanFactory#setParentBeanFactory}
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 07.07.2003
@@ -44,6 +46,8 @@ public interface HierarchicalBeanFactory extends BeanFactory {
 	 * ignoring beans defined in ancestor contexts.
 	 * <p>This is an alternative to {@code containsBean}, ignoring a bean
 	 * of the given name from an ancestor bean factory.
+	 * <p> serajoon
+	 * <p> 判断本地工厂是否包含这个Bean(忽略其他所有父工厂),这也是分层思想的体现
 	 * @param name the name of the bean to query
 	 * @return whether a bean with the given name is defined in the local factory
 	 * @see BeanFactory#containsBean

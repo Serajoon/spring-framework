@@ -53,6 +53,10 @@ import org.springframework.lang.Nullable;
  * ApplicationContext, to get access to an AutowireCapableBeanFactory:
  * simply cast the passed-in BeanFactory to AutowireCapableBeanFactory.
  *
+ * <p> serajoon
+ * <p> 对于想要拥有自动装配能力,并且想把这种能力暴露给外部应用的BeanFactory类需要实现此接口
+ * <p> ApplicationContext接口并没有实现此接口,因为应用代码很少用到此功能
+ *
  * @author Juergen Hoeller
  * @since 04.12.2003
  * @see org.springframework.beans.factory.BeanFactoryAware
@@ -64,6 +68,9 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	/**
 	 * Constant that indicates no externally defined autowiring. Note that
 	 * BeanFactoryAware etc and annotation-driven injection will still be applied.
+	 * <p> serajoon
+	 * <p> 用于标识外部自动装配功能是否可用
+	 *
 	 * @see #createBean
 	 * @see #autowire
 	 * @see #autowireBeanProperties
@@ -73,6 +80,9 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	/**
 	 * Constant that indicates autowiring bean properties by name
 	 * (applying to all bean property setters).
+	 * <p> serajoon
+	 * <p> 标识按名装配的常量
+	 *
 	 * @see #createBean
 	 * @see #autowire
 	 * @see #autowireBeanProperties
@@ -82,6 +92,9 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	/**
 	 * Constant that indicates autowiring bean properties by type
 	 * (applying to all bean property setters).
+	 * <p> serajoon
+	 * <p> 标识按类型自动装配的常量
+	 *
 	 * @see #createBean
 	 * @see #autowire
 	 * @see #autowireBeanProperties
@@ -91,6 +104,9 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	/**
 	 * Constant that indicates autowiring the greediest constructor that
 	 * can be satisfied (involves resolving the appropriate constructor).
+	 * <p> serajoon
+	 * <p> 标识按照贪婪策略匹配出的最符合的构造方法来自动装配的常量
+	 *
 	 * @see #createBean
 	 * @see #autowire
 	 */
@@ -145,6 +161,7 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	 * methods, either for new instances or for deserialized instances. It does
 	 * <i>not</i> imply traditional by-name or by-type autowiring of properties;
 	 * use {@link #autowireBeanProperties} for those purposes.
+	 *
 	 * @param existingBean the existing bean instance
 	 * @throws BeansException if wiring failed
 	 */

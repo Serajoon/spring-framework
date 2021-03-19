@@ -127,6 +127,8 @@ public interface SingletonBeanRegistry {
 
 	/**
 	 * Return the singleton mutex used by this registry (for external collaborators).
+	 * <p> serajoon
+	 * <p> 获得单例互斥锁
 	 * @return the mutex object (never {@code null})
 	 * @since 4.2
 	 */

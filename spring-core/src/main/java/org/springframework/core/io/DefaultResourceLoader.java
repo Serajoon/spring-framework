@@ -150,7 +150,8 @@ public class DefaultResourceLoader implements ResourceLoader {
 				return resource;
 			}
 		}
-
+		// serajoon
+		// 以/开头->ClassPathContextResource
 		if (location.startsWith("/")) {
 			return getResourceByPath(location);
 		}
@@ -158,6 +159,8 @@ public class DefaultResourceLoader implements ResourceLoader {
 			return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader());
 		}
 		else {
+			// serajoon
+			// 尝试将资源路径转化为URL形式去加载
 			try {
 				// Try to parse the location as a URL...
 				URL url = new URL(location);
@@ -165,6 +168,8 @@ public class DefaultResourceLoader implements ResourceLoader {
 			}
 			catch (MalformedURLException ex) {
 				// No URL -> resolve as resource path.
+				// serajoon
+				// 都不匹配 则使用默认的classpath
 				return getResourceByPath(location);
 			}
 		}

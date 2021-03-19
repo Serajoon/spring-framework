@@ -41,6 +41,8 @@ import org.springframework.util.StringValueResolver;
  * {@link org.springframework.beans.factory.ListableBeanFactory} for typical
  * needs. This extended interface is just meant to allow for framework-internal
  * plug'n'play and for special access to bean factory configuration methods.
+ * <p> serajoon
+ * <p> 同时继承了HierarchicalBeanFactory和SingletonBeanRegistry接口,有分层和单例注册的功能
  *
  * @author Juergen Hoeller
  * @since 03.11.2003
@@ -53,6 +55,8 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	/**
 	 * Scope identifier for the standard singleton scope: "singleton".
 	 * Custom scopes can be added via {@code registerScope}.
+	 * <p> serajoon
+	 * <p> 单例
 	 * @see #registerScope
 	 */
 	String SCOPE_SINGLETON = "singleton";
@@ -60,6 +64,8 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	/**
 	 * Scope identifier for the standard prototype scope: "prototype".
 	 * Custom scopes can be added via {@code registerScope}.
+	 * <p> serajoon
+	 * <p> 原型
 	 * @see #registerScope
 	 */
 	String SCOPE_PROTOTYPE = "prototype";
@@ -69,6 +75,9 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * Set the parent of this bean factory.
 	 * <p>Note that the parent cannot be changed: It should only be set outside
 	 * a constructor if it isn't available at the time of factory instantiation.
+	 * <p> serajoon
+	 * <p> 设置父工厂,跟HierarchicalBeanFactory接口的getParentBeanFactory方法互补
+	 *
 	 * @param parentBeanFactory the parent BeanFactory
 	 * @throws IllegalStateException if this factory is already associated with
 	 * a parent BeanFactory
@@ -103,6 +112,9 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * <i>load-time weaving</i> is involved, to make sure that actual bean
 	 * classes are loaded as lazily as possible. The temporary loader is
 	 * then removed once the BeanFactory completes its bootstrap phase.
+	 * <p> serajoon
+	 * <p> 设置临时类加载器
+	 *
 	 * @since 2.5
 	 */
 	void setTempClassLoader(@Nullable ClassLoader tempClassLoader);

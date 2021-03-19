@@ -49,8 +49,9 @@ import org.springframework.lang.Nullable;
  * and {@code containsBeanDefinition}, the methods in this interface
  * are not designed for frequent invocation. Implementations may be slow.
  *
- * <br> serajoon
- * <br> 根据条件返回Bean的集合
+ * <p> serajoon
+ * <p> 根据条件返回Bean的集合,提供容器中Bean的迭代功能,不再需要一个个的查找Bean
+ * <p> 其中包含3个跟BeanDefinition相关的方法
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
