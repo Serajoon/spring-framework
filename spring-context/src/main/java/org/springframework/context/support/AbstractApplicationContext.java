@@ -529,7 +529,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// serajoon 3
 			// 对beanFactory填充属性
 			// 添加BeanPostProcessor,手动注册几个默认的bean(environment,systemProperties,systemEnvironment)
-			//
 			prepareBeanFactory(beanFactory);
 
 			try {
@@ -678,7 +677,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
-		// serajoon 添加后置处理器ApplicationContextAwareProcessor
+		// serajoon 添加后置处理器ApplicationContextAwareProcessor,处理各种Aware接口
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 		// serajoon 忽略以下6个属性的自动注入,因为在ApplicationContextAwareProcessor的postProcessBeforeInitialization
 		// 中已经处理了

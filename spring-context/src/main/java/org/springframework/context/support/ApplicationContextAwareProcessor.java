@@ -108,6 +108,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 				((EmbeddedValueResolverAware) bean).setEmbeddedValueResolver(this.embeddedValueResolver);
 			}
 			if (bean instanceof ResourceLoaderAware) {
+				// serajoon 实现了ResourceLoaderAware接口的,在这将ApplicationContext注入
 				((ResourceLoaderAware) bean).setResourceLoader(this.applicationContext);
 			}
 			if (bean instanceof ApplicationEventPublisherAware) {
