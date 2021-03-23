@@ -70,6 +70,10 @@ class ConditionEvaluator {
 	 * @return if the item should be skipped
 	 */
 	public boolean shouldSkip(AnnotatedTypeMetadata metadata) {
+		// serajoon 这里phase为null
+		// 后面会根据类上的注解类型是full/lite来判断是配置还是注册阶段
+		// ConfigurationClassUtils.isConfigurationCandidate phase->ConfigurationPhase.PARSE_CONFIGURATION
+		// 否则phase->ConfigurationPhase.REGISTER_BEAN
 		return shouldSkip(metadata, null);
 	}
 
@@ -98,6 +102,8 @@ class ConditionEvaluator {
 		List<Condition> conditions = new ArrayList<>();
 		for (String[] conditionClasses : getConditionClasses(metadata)) {
 			for (String conditionClass : conditionClasses) {
+				// serajoon
+				// 根据conditionClass类的全限定名和classLoader,生成相应的condition实例
 				Condition condition = getCondition(conditionClass, this.context.getClassLoader());
 				conditions.add(condition);
 			}
@@ -110,11 +116,13 @@ class ConditionEvaluator {
 			if (condition instanceof ConfigurationCondition) {
 				requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();
 			}
+			// serajoon
+			// 判定,如果不符合条件则返回true,即跳过
 			if ((requiredPhase == null || requiredPhase == phase) && !condition.matches(this.context, metadata)) {
 				return true;
 			}
 		}
-
+		// serajoon 不跳过
 		return false;
 	}
 
@@ -156,6 +164,8 @@ class ConditionEvaluator {
 			this.beanFactory = deduceBeanFactory(registry);
 			this.environment = (environment != null ? environment : deduceEnvironment(registry));
 			this.resourceLoader = (resourceLoader != null ? resourceLoader : deduceResourceLoader(registry));
+			// serajoon 为什么需要classloader getCondition中需要将给定的类名解析为一个类实例,
+			// 通过Class.forName(name, false, classloader)得到类的实例
 			this.classLoader = deduceClassLoader(resourceLoader, this.beanFactory);
 		}
 
