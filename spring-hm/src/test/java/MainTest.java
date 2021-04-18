@@ -1,27 +1,22 @@
-import com.condition.ConditionMain;
 import com.lifecycle.LifeCycleMain;
-import com.serajoon.ClassTest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.ToString;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.beans.BeanMetadataAttribute;
-import org.springframework.beans.BeanMetadataAttributeAccessor;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.core.type.StandardAnnotationMetadata;
-import org.springframework.core.type.StandardClassMetadata;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RestController;
+import sun.misc.Unsafe;
 
 import javax.annotation.Resource;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Set;
+import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainTest {
@@ -53,17 +48,57 @@ public class MainTest {
 	}
 
 	@Test
-	public void test4(){
-		AtomicBoolean active = new AtomicBoolean();
-		System.out.println(active.get());
+	public void test4() throws Exception{
+		Field age = Person.class.getDeclaredField("age");
+		long l = reflectGetUnsafe().objectFieldOffset(age);
+		Assert.assertEquals(12L,l);
+		AtomicBoolean b = new AtomicBoolean(true);
+		boolean b1 = b.compareAndSet(true, false);
+		Assert.assertTrue(b1);
+		boolean b2 = b.get();
+		Assert.assertFalse(b2);
+		boolean andSet = b.getAndSet(true);
+		Assert.assertFalse(andSet);
+		Assert.assertTrue(b.get());
+//		b.lazySet();
+
+	}
+
+	@Test
+	public void test5() throws Exception{
+		Unsafe unsafe = reflectGetUnsafe();
+		Person person = new Person("han",12);
+		Field nameField = person.getClass().getDeclaredField("name");
+		long nameOffset = unsafe.objectFieldOffset(nameField);
+		long ageOffset = unsafe.objectFieldOffset(person.getClass().getDeclaredField("age"));
+		unsafe.putObject(person,nameOffset,"meng");
+//		unsafe.putInt(person,ageOffset,10);
+//		unsafe.putIntVolatile(person,ageOffset,10);
+		unsafe.putOrderedInt(person,ageOffset,10);
+		System.out.println(person);
+
+	}
+
+	private static Unsafe reflectGetUnsafe() {
+		try {
+			Field field = Unsafe.class.getDeclaredField("theUnsafe");
+			field.setAccessible(true);
+			return (Unsafe) field.get(null);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }
 
 @Component
 @Resource(name="aaa")
 @Controller
+@AllArgsConstructor
+@ToString
+@Data
 class Person {
 	private String name;
+	private int age;
 
 	@Bean
 	public String getName() {

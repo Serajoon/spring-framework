@@ -20,7 +20,7 @@ include "spring-webmvc"
 include "spring-webflux"
 include "spring-websocket"
 include "spring-framework-bom"
-//include 'spring-hm'
+include 'spring-hm'
 // gradle build -x test
 // Exposes gradle buildSrc for IDE support
 include "buildSrc"
